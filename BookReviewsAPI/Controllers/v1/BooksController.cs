@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookReviewsAPI.Controllers
 {
     [ApiController]
-    [Route("books")]
+    [Route("api/v{version:apiVersion}/books")]
+    [ApiVersion("1.0")]
     public class BooksController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
@@ -21,11 +22,10 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult GetBookById([FromRoute(Name="id")]int id)
+        public ActionResult GetBookById([FromRoute(Name="id")] int id)
         {
             var result = _bookRepository.GetById(id);
             return result is not null ? Ok(_bookRepository.GetById(id)) : NoContent();
         }
-
     }
 }

@@ -1,9 +1,14 @@
 using BookReviewsAPI.Models.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IBookRepository, BookRepository>();
-
+builder.Services.AddApiVersioning(options =>
+{
+    options.ReportApiVersions = true;
+});
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
