@@ -1,5 +1,6 @@
 ﻿using BookReviewsAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace BookReviewsAPI.Controllers
 {
@@ -26,6 +27,19 @@ namespace BookReviewsAPI.Controllers
         {
             var result = _bookRepository.GetById(id);
             return result is not null ? Ok(_bookRepository.GetById(id)) : NoContent();
+        }
+
+        [HttpGet("img/{id:int}")]
+        public ActionResult GetBookImageById([FromRoute(Name = "id")] int id)
+        {
+            var filePath = $"./Resources/Images/book-{id}.jpeg";
+            if(!System.IO.File.Exists(filePath))
+            {
+                return NoContent();
+            }
+
+            Byte[] buffer = System.IO.File.ReadAllBytes(filePath);
+            return File(buffer, "image/jpeg");
         }
     }
 }
