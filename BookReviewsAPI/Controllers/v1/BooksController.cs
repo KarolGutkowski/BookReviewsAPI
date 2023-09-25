@@ -29,10 +29,10 @@ namespace BookReviewsAPI.Controllers
             return result is not null ? Ok(_bookRepository.GetById(id)) : NoContent();
         }
 
-        [HttpGet("img/{id:int}")]
-        public ActionResult GetBookImageById([FromRoute(Name = "id")] int id)
+        [HttpGet("img/{name}")]
+        public ActionResult GetImageById([FromRoute(Name = "name")] string name)
         {
-            var filePath = $"./Resources/Images/book-{id}.jpeg";
+            var filePath = $"./Resources/Images/{name}";
             if(!System.IO.File.Exists(filePath))
             {
                 return NoContent();

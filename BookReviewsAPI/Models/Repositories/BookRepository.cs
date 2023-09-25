@@ -21,7 +21,17 @@ namespace BookReviewsAPI.Models.Repositories
 
         public IEnumerable<Book> GetAll()
         {
-            string getAllQuery = "SELECT B.Id, B.Title, B.[year], A.Id As AuthorId, A.first_name As FirstName, A.last_name As LastName, A.date_of_birth As DateOfBirth FROM Books B INNER JOIN Book_Authors Ba ON Ba.book_id = B.id INNER JOIN Authors A ON Ba.author_id = A.id";
+            string getAllQuery = 
+                "SELECT B.Id As Id, " +
+                "B.Title As Title, " +
+                "B.[year] As Year, " +
+                "A.Id As AuthorId, " +
+                "A.first_name As FirstName, " +
+                "A.last_name As LastName, " +
+                "A.date_of_birth As DateOfBirth " +
+                "FROM Books As B " +
+                "INNER JOIN Book_Authors As Ba ON Ba.book_id = B.id " +
+                "INNER JOIN Authors A ON Ba.author_id = A.id";
 
             var books = _dbConnection.Query<Book, Author, Book>(getAllQuery, (book, author) =>
             {
@@ -33,14 +43,43 @@ namespace BookReviewsAPI.Models.Repositories
                 return book;
             }, splitOn: "AuthorId");
 
+            foreach(var book in books)
+            {
+                book.Img = ImageGetEndpoint(book);
+            }
+
             return books;
+        }
+
+        public string ImageGetEndpoint(Book book)
+        {
+            var expectedImageName = $"book-{book.Id}.jpeg";
+            var placeholderImageName = $"placeholder.jpeg";
+
+            var imageGetLocationPrefix = _configuration.GetSection("ImageEndpointPrefix").Value;
+            if (File.Exists($"./Resources/Images/{expectedImageName}"))
+            {
+                return imageGetLocationPrefix + expectedImageName;
+            }
+            else
+            {
+                return imageGetLocationPrefix + placeholderImageName;
+            }
         }
 
         public Book? GetById(int id)
         {
             string getBookByIdQuery =
                 "SELECT B.* FROM Books AS B WHERE Id = @Id;"+
-                "SELECT A.Id As AuthorId,A.first_name AS FirstName,A.last_name AS LastName,A.date_of_birth AS DateOfBirth FROM Authors AS A WHERE A.id IN(SELECT author_id FROM Book_Authors WHERE book_id = @Id)";
+                "SELECT A.Id As AuthorId, " +
+                "A.first_name AS FirstName, " +
+                "A.last_name AS LastName, " +
+                "A.date_of_birth AS DateOfBirth " +
+                "FROM Authors AS A " +
+                "WHERE A.id " +
+                "IN(" +
+                "       SELECT author_id FROM Book_Authors WHERE book_id = @Id" +
+                ")";
 
             using (var multi = _dbConnection.QueryMultiple(getBookByIdQuery, new { Id=id }))
             {
@@ -50,6 +89,7 @@ namespace BookReviewsAPI.Models.Repositories
                 var authors = multi.Read<Author>()?.ToList();
                 if(authors is not null)
                     book.Authors = new List<Author>(authors);
+                book.Img = ImageGetEndpoint(book);
                 return book;
             }
         }

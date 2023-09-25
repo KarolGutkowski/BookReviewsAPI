@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IBookRepository, BookRepository>();
 builder.Services.AddApiVersioning(options =>
 {
+    //options.AssumeDefaultVersionWhenUnspecified = true;
+    //options.DefaultApiVersion = ApiVersion.Default;
     options.ReportApiVersions = true;
 });
 builder.Services.AddControllers();
