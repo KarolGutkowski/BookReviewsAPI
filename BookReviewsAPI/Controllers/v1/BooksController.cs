@@ -1,6 +1,8 @@
-﻿using BookReviewsAPI.Models.Repositories;
+﻿using BookReviewsAPI.Models;
+using BookReviewsAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookReviewsAPI.Controllers
 {
@@ -9,24 +11,55 @@ namespace BookReviewsAPI.Controllers
     [ApiVersion("1.0")]
     public class BooksController : ControllerBase
     {
-        private readonly IBookRepository _bookRepository;
-
-        public BooksController(IBookRepository bookRepository)
+        //private readonly IBookRepository _bookRepository;
+        private readonly IConfiguration _configuration;
+        private readonly BookReviewsDbContext _bookReviewsDbContext;
+        public BooksController(BookReviewsDbContext bookReviewsDbContext,
+            IConfiguration configuration)
         {
-            _bookRepository = bookRepository;
+            _bookReviewsDbContext = bookReviewsDbContext;   
+            _configuration = configuration;
         }
 
         [HttpGet]
         public ActionResult GetAllBooks()
         {
-            return Ok(_bookRepository.GetAll());
+            var books = _bookReviewsDbContext.Books;
+            foreach(var book in books)
+            {
+                mapBookImageSourceToEndpointPath(book);
+            }
+            return Ok(books);
         }
 
         [HttpGet("{id:int}")]
         public ActionResult GetBookById([FromRoute(Name="id")] int id)
         {
-            var result = _bookRepository.GetById(id);
-            return result is not null ? Ok(_bookRepository.GetById(id)) : NoContent();
+            Book? bookResult;
+            try
+            {
+                bookResult = _bookReviewsDbContext.Books
+                    .Include(b => b.Authors)
+                    .Include(b => b.Reviews)
+                    .SingleOrDefault(b => b.Id == id);
+            }
+            catch(InvalidOperationException )
+            {
+                return NotFound();
+            }
+
+            if (bookResult is not null)
+                mapBookImageSourceToEndpointPath(bookResult);
+
+            return bookResult is not null ? Ok(bookResult) : NoContent();
+        }
+
+        private void mapBookImageSourceToEndpointPath(Book book)
+        {
+            if (book.Img is null)
+                book.Img = "placeholder";
+
+            book.Img = _configuration.GetSection("ImageEndpointPrefix").Value + book.Img + ".jpeg";
         }
 
         [HttpGet("img/{name}")]
@@ -35,7 +68,7 @@ namespace BookReviewsAPI.Controllers
             var filePath = $"./Resources/Images/{name}";
             if(!System.IO.File.Exists(filePath))
             {
-                return NoContent();
+                filePath = $"./Resources/Images/placeholder.jpeg";
             }
 
             Byte[] buffer = System.IO.File.ReadAllBytes(filePath);

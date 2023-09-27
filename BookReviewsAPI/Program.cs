@@ -1,6 +1,8 @@
+using BookReviewsAPI.Models;
 using BookReviewsAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddApiVersioning(options =>
 });
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<BookReviewsDbContext>();
 
 var app = builder.Build();
 

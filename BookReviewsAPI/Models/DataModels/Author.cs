@@ -1,14 +1,21 @@
 ﻿using Dapper;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BookReviewsAPI.Models
 {
     public class Author
     {
-        public int AuthorId { get; set; }
+        public int Id { get; set; }
+
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
-        public List<Book> Books { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Book> Books { get; set; }
         public DateTime DateOfBirth { get; set; }
     }
 }
