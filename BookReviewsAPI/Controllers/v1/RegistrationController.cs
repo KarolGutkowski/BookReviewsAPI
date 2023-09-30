@@ -1,4 +1,5 @@
 ﻿using BookReviewsAPI.Models;
+using BookReviewsAPI.Registration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BC = BCrypt.Net.BCrypt;
@@ -11,46 +12,29 @@ namespace BookReviewsAPI.Controllers.v1
     [AllowAnonymous]
     public class RegistrationController: ControllerBase
     {
-        private readonly BookReviewsDbContext _bookReviewsDbContext;
-
-        public RegistrationController(BookReviewsDbContext bookReviewsDbContext)
+        private readonly ILogger<RegistrationController> _logger;
+        private readonly IRegistrationHelper _registrationHelper;
+        public RegistrationController(
+            ILogger<RegistrationController> logger, 
+            IRegistrationHelper registrationHelper
+            )
         {
-            _bookReviewsDbContext = bookReviewsDbContext;
+            _logger = logger;
+            _registrationHelper = registrationHelper;
         }
 
-        
+
         [HttpPost("{username}/{password}")]
         public ActionResult Register([FromRoute] string username, string password)
         {
-            return TryToRegisterUser(username, password);
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public ActionResult TryToRegisterUser(string username, string password)
-        {
-            var hashedPassword = BC.EnhancedHashPassword(password);
-            var user = new User()
-            {
-                UserName = username,
-                Password = hashedPassword
-            };
-
-            if (_bookReviewsDbContext.Users.Any(x => x.UserName == username))
-            {
-                return Conflict("username already taken");
-            }
-
-            _bookReviewsDbContext.Users.Add(user);
-            _bookReviewsDbContext.SaveChanges();
-
-            return Ok(user);
+            return _registrationHelper.TryToRegisterUser(username, password)? Ok(): Conflict();
         }
 
 
         [HttpPost]
         public ActionResult Register([FromBody] User user)
         {
-            return TryToRegisterUser(user.UserName, user.Password);
+            return _registrationHelper.TryToRegisterUser(user.UserName, user.Password) ? Ok() : Conflict();
         }
     }
 }

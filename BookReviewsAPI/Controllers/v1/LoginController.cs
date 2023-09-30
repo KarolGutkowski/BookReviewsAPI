@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using BookReviewsAPI.Models;
 using BC = BCrypt.Net.BCrypt;
+using BookReviewsAPI.Authentication.Helpers;
 
 namespace BookReviewsAPI.Controllers.v1
 {
@@ -13,53 +14,35 @@ namespace BookReviewsAPI.Controllers.v1
     [Route("api/v{version:apiVersion}/login")]
     [ApiVersion("1.0")]
     [AllowAnonymous]
-    public class LoginController: ControllerBase
+    public class LoginController : ControllerBase
     {
-        private readonly BookReviewsDbContext _bookReviewsDbContext;
-        public LoginController(BookReviewsDbContext bookReviewsDbContext)
+        private readonly ILogger<LoginController> _logger;
+        private readonly IUserAuthenticationHelper _userAuthenticationHelper;
+        private readonly IClaimsHelper _claimsHelper;
+        public LoginController(
+            ILogger<LoginController> logger, 
+            IUserAuthenticationHelper userAuthenticationHelper, 
+            IClaimsHelper claimsHelper
+            )
         {
-            _bookReviewsDbContext = bookReviewsDbContext;
+            _logger = logger;
+            _userAuthenticationHelper = userAuthenticationHelper;
+            _claimsHelper = claimsHelper;
         }
 
         [HttpPost]
         public ActionResult Login([FromBody] User user)
         {
-
-            var isUser = HasCorrectUserCredentials(user);
-
-            if(!isUser)
+            if (!_userAuthenticationHelper.IsAuthenticatedUser(user))
                 return Unauthorized();
 
+            var claimsSchema = AuthenticationSchemasConsts.DefaultSchema;
+            var principal = _claimsHelper.GenerateUserClaimsPrincipal(user, claimsSchema);
 
-            var claims = new List<Claim>();
-            claims.Add(new Claim(AuthenticationPoliciesConsts.DefaultUserAuth, user.UserName));
-            var indentity = new ClaimsIdentity(claims, AuthenticationSchemasConsts.DefaultSchema);
-            var principal = new ClaimsPrincipal(indentity);
-
-            HttpContext.SignInAsync(AuthenticationSchemasConsts.DefaultSchema, principal);
+            HttpContext.SignInAsync(claimsSchema, principal);
+            _logger.LogInformation($"Logged in user with username={user.UserName}");
 
             return Ok();
         }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [NonAction]
-        public bool HasCorrectUserCredentials(User user)
-        {
-            User? matchedUser = null;
-            try
-            {
-                matchedUser = _bookReviewsDbContext.Users.SingleOrDefault((x) => x.UserName == user.UserName);
-            }catch(InvalidOperationException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-
-            if (matchedUser is null)
-                return false;
-
-            return BC.Verify(user.Password, matchedUser.Password, enhancedEntropy: true);
-        }
-
     }
 }
