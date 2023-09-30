@@ -3,12 +3,15 @@ using BookReviewsAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using BookReviewsAPI.Authentication.Policies;
 
 namespace BookReviewsAPI.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/books")]
     [ApiVersion("1.0")]
+    [Authorize(Policy = AuthenticationPoliciesConsts.DefaultUserAuth)]
     public class BooksController : ControllerBase
     {
         //private readonly IBookRepository _bookRepository;
@@ -34,7 +37,7 @@ namespace BookReviewsAPI.Controllers
 
         [HttpGet("{id:int}")]
         public ActionResult GetBookById([FromRoute(Name="id")] int id)
-        {
+        { 
             Book? bookResult;
             try
             {
