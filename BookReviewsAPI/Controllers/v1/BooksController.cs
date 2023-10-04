@@ -68,6 +68,7 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet("img/{name}")]
+        [AllowAnonymous]
         public ActionResult GetImageById([FromRoute(Name = "name")] string name)
         {
             var filePath = $"./Resources/Images/{name}";
