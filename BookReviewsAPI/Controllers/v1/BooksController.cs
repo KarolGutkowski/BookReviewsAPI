@@ -25,6 +25,7 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult GetAllBooks()
         {
             var books = _bookReviewsDbContext.Books;
@@ -57,6 +58,7 @@ namespace BookReviewsAPI.Controllers
             return bookResult is not null ? Ok(bookResult) : NoContent();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private void mapBookImageSourceToEndpointPath(Book book)
         {
             if (book.Img is null)
