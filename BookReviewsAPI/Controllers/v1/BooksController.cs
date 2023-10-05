@@ -25,7 +25,6 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult GetAllBooks()
         {
             var books = _bookReviewsDbContext.Books;
@@ -37,6 +36,7 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
+
         public ActionResult GetBookById([FromRoute(Name="id")] int id)
         { 
             Book? bookResult;
@@ -68,7 +68,6 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet("img/{name}")]
-        [AllowAnonymous]
         public ActionResult GetImageById([FromRoute(Name = "name")] string name)
         {
             var filePath = $"./Resources/Images/{name}";
