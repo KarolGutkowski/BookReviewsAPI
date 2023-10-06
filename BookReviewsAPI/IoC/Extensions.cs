@@ -40,7 +40,10 @@ namespace Microsoft.Extensions
         public static void AddCookieAuthenticationAndAuthorization(this IServiceCollection services)
         {
             services.AddAuthentication(AuthenticationSchemasConsts.DefaultSchema)
-                .AddCookie(AuthenticationSchemasConsts.DefaultSchema); //add cookie schemas
+                .AddCookie(AuthenticationSchemasConsts.DefaultSchema, options =>
+                {
+                    options.Cookie.SameSite = SameSiteMode.None;
+                });
             services.AddAuthorization(builder =>
             {
                 builder.AddPolicy(AuthenticationPoliciesConsts.DefaultUserAuth, policyBuilder =>

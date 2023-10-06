@@ -9,7 +9,10 @@ export default function BooksQueryForm()
     {
         event.preventDefault();
         try{
-            const response = await fetch("https://localhost:7235/api/v1/books");
+            const response = await fetch("https://localhost:7235/api/v1/books",
+            {
+              credentials: "include",
+            });
             const json = await response.json();
             setBooks(json);
         }catch(error)
