@@ -1,8 +1,7 @@
-﻿using BookReviewsAPI.Models;
+﻿using BookReviews.Domain.Models.DataModels;
 using BookReviewsAPI.Registration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BC = BCrypt.Net.BCrypt;
 
 namespace BookReviewsAPI.Controllers.v1
 {

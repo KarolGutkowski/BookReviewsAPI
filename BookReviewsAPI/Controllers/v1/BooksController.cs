@@ -1,10 +1,10 @@
-﻿using BookReviewsAPI.Models;
-using BookReviewsAPI.Models.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using BookReviewsAPI.Authentication.Policies;
+using BookReviews.Domain.Models;
+using BookReviews.Infrastructure.Authentication.Policies;
+using BookReviews.Domain.Models.DataModels;
 
 namespace BookReviewsAPI.Controllers
 {

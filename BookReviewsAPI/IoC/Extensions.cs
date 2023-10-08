@@ -1,9 +1,10 @@
-﻿using BookReviews.WebAPI.Consts;
-using BookReviewsAPI.Authentication.Helpers;
-using BookReviewsAPI.Authentication.Policies;
-using BookReviewsAPI.Authentication.Schemas;
-using BookReviewsAPI.Cryptography;
-using BookReviewsAPI.Models;
+﻿using BookReviews.Domain.Models;
+using BookReviews.Infrastructure.Authentication.Helpers;
+using BookReviews.Infrastructure.Authentication.Policies;
+using BookReviews.Infrastructure.Authentication.Schemas;
+using BookReviews.Infrastructure.Cryptography;
+using BookReviews.Infrastructure.Registration;
+using BookReviews.WebAPI.Consts;
 using BookReviewsAPI.Registration;
 
 

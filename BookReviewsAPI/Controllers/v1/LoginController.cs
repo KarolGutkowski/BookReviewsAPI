@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using BookReviewsAPI.Authentication.Policies;
-using BookReviewsAPI.Authentication.Schemas;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using BookReviewsAPI.Models;
-using BC = BCrypt.Net.BCrypt;
-using BookReviewsAPI.Authentication.Helpers;
+using BookReviews.Infrastructure.Authentication.Helpers;
+using BookReviews.Infrastructure.Authentication.Schemas;
+using BookReviews.Domain.Models.DataModels;
 
 namespace BookReviewsAPI.Controllers.v1
 {
