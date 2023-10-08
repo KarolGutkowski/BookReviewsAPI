@@ -11,14 +11,11 @@ namespace BookReviewsAPI.Controllers.v1
     [AllowAnonymous]
     public class RegistrationController: ControllerBase
     {
-        private readonly ILogger<RegistrationController> _logger;
         private readonly IRegistrationHelper _registrationHelper;
         public RegistrationController(
-            ILogger<RegistrationController> logger, 
             IRegistrationHelper registrationHelper
             )
         {
-            _logger = logger;
             _registrationHelper = registrationHelper;
         }
 

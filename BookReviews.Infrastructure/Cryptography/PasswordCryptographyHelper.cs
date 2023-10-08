@@ -4,7 +4,7 @@ namespace BookReviews.Infrastructure.Cryptography;
 
 public class BCryptPasswordHelper : IPasswordCryptographyHelper
 {
-    private const bool enhancedEntropy = true;
+    private const bool _enhancedEntropy = true;
 
     public string GenerateHash(string password)
     {
@@ -13,6 +13,6 @@ public class BCryptPasswordHelper : IPasswordCryptographyHelper
 
     public bool VerifyPassword(string password, string storedHash)
     {
-        return BC.Verify(password, storedHash, enhancedEntropy: enhancedEntropy);
+        return BC.Verify(password, storedHash, enhancedEntropy: _enhancedEntropy);
     }
 }

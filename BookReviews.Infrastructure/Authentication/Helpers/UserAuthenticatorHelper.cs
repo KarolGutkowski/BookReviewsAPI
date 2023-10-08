@@ -30,7 +30,7 @@ public class UserAuthenticatonHelper : IUserAuthenticationHelper
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogError("There shouldn't be two users with same username: " + ex.ToString());
+            _logger.LogError("There shouldn't be two users with same username: {errorMessage}", ex.Message);
             return false;
         }
 

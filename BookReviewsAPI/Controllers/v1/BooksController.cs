@@ -30,7 +30,7 @@ namespace BookReviewsAPI.Controllers
             var books = _bookReviewsDbContext.Books;
             foreach(var book in books)
             {
-                mapBookImageSourceToEndpointPath(book);
+                MapBookImageSourceToEndpointPath(book);
             }
             return Ok(books);
         }
@@ -53,13 +53,13 @@ namespace BookReviewsAPI.Controllers
             }
 
             if (bookResult is not null)
-                mapBookImageSourceToEndpointPath(bookResult);
+                MapBookImageSourceToEndpointPath(bookResult);
 
             return bookResult is not null ? Ok(bookResult) : NoContent();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private void mapBookImageSourceToEndpointPath(Book book)
+        private void MapBookImageSourceToEndpointPath(Book book)
         {
             if (book.Img is null)
                 book.Img = "placeholder";

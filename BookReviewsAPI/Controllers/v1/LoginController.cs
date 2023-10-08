@@ -38,7 +38,7 @@ namespace BookReviewsAPI.Controllers.v1
             var principal = _claimsHelper.GenerateUserClaimsPrincipal(user, claimsSchema);
 
             HttpContext.SignInAsync(claimsSchema, principal);
-            _logger.LogInformation($"Logged in user with username={user.UserName}");
+            _logger.LogInformation("Logged in user with username={UserName}", user.UserName);
 
             return Ok();
         }
