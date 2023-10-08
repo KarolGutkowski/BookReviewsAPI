@@ -28,7 +28,10 @@ namespace BookReviews.Domain.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("BooksReviews"));
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("BooksReviews"), b =>
+            {
+                b.MigrationsAssembly("BookReviews.WebAPI");
+            });
         }
     }
 }

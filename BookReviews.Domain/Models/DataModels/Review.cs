@@ -9,6 +9,7 @@ public class Review
     public Book Book { get; set; }
     [Required]
     public User User { get; set; }
+    public DateTime CreatedAt { get; set; }
     public decimal Rating { get; set; }
     public string Content { get; set; }
 }

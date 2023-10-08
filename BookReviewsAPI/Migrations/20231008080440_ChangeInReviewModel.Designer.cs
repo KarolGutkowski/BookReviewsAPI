@@ -4,6 +4,7 @@ using BookReviews.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookReviewsAPI.Migrations
 {
     [DbContext(typeof(BookReviewsDbContext))]
-    partial class BookReviewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231008080440_ChangeInReviewModel")]
+    partial class ChangeInReviewModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,9 +101,6 @@ namespace BookReviewsAPI.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("Rating")
                         .HasColumnType("decimal(18,2)");
