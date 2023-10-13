@@ -1,11 +1,10 @@
 const Book = ({props})=>
 {
     return (
-        <div>
-            <hr></hr>
-            <p>Title: {props.title}</p>
-            <p>Year: {props.year}</p>
-            <img src={props.img} alt="book cover" height="100px" width="70px"></img>
+        <div className="book-container">
+            <p className={`book-title`}>{props.title}</p>
+            <p>{props.year}</p>
+            <img className="book-cover" src={props.img} alt="book cover"></img>
         </div>
     );
 }
