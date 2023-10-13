@@ -24,9 +24,15 @@ export default function BooksQueryForm()
 
 
   return (
-    <div className="App">
-    <input type="submit" value="Get all books" onClick={getAllBooks}></input>
     <div>
+      {
+      books.length===0? 
+      <div className="get-all-books-container">
+        <button className="get-all-books-button" onClick={getAllBooks}>All books</button>
+      </div>:
+      null
+      }
+    <div className="books-container">
       {
         !books.length?(
           <p>No books returned</p>

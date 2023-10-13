@@ -33,7 +33,7 @@ export default function LoginForm()
     }
 
     return (
-        <form onSubmit={LoginUser} method="post">
+        <form onSubmit={LoginUser} method="post" className="login-form">
             <label htmlFor="login">
                 Login:
             </label>
@@ -43,7 +43,7 @@ export default function LoginForm()
                 Password:
             </label>
             <input type="password" name="password"/>
-            <input type="submit" value="Log In"/>
+            <button>Log In</button>
         </form>
     );
 }
