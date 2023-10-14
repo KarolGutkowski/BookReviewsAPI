@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import { useContext } from "react";
 
 export default function LoginForm()
 {
-    const {isLoggedIn,setLoggedIn}= useContext(UserLoginStateContext);
+    const {_,setLoggedIn}= useContext(UserLoginStateContext);
 
     async function LoginUser(e)
     {
