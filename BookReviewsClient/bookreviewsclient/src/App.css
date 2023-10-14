@@ -14,7 +14,8 @@ body
 .nav-list
 {
   background-color: white;
-  width: 90%;
+  width: 80%;
+  font-size: 1.5rem;
   margin: 0 auto;
   padding: 1rem 0;
   display: flex;
@@ -52,7 +53,6 @@ body
   background-color: transparent;
   width: 90%;
   margin: auto;
-  box-shadow: 5px 5px 5px lightgrey;
 }
 
 .book-container
@@ -105,9 +105,10 @@ body
   background: #558B78;
   color: #EBF1E9;
   padding: 0.4rem 1rem;
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   text-transform: uppercase;
   font-weight: 500;
+  font-size: 1.5rem;
   transition: 0.3s;
 }
 
@@ -123,8 +124,9 @@ body
   color: #558B78;
   font-weight: 200;
   border-radius: 1rem;
-  padding: 0.2rem 4rem;
+  font-size: 1.5rem;
   background-color: transparent;
+  margin-left: 5px;
 }
 
 .nav-search-bar::placeholder
@@ -159,7 +161,18 @@ body
   justify-content: center;
   align-content: center;
   border-radius: 2rem;
-  height: 30px;
+  height: 2rem;
   padding: 5px;
   border: 1px solid #BCBCBC;
+}
+
+.search-icon
+{
+  max-height: 50px;
+  max-width: auto;
+}
+
+a
+{
+  text-decoration: none;
 }

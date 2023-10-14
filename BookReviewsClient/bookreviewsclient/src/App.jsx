@@ -4,7 +4,7 @@ import UserLoginStateContext from './Components/UserLoginStateContext';
 import BooksQueryForm from './Components/BooksQueryForm';
 import LoginForm from './Components/LoginForm';
 import NavigationBar from './Components/NavigationBar';
-import { logDOM } from '@testing-library/react';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -13,11 +13,22 @@ function App() {
 
   return (
     <UserLoginStateContext.Provider value={loggedInState}>
+      <BrowserRouter>
       <NavigationBar/>
-      <div className="content-container">
-      {loggedIn? <BooksQueryForm/>: <LoginForm />}
-      </div>
+        <Routes>
+            <Route path="/login" element={<div className="content-container">
+              <LoginForm/>
+            </div>}/>
+            <Route path="/books" element={
+              <div className="content-container">
+                <BooksQueryForm/>
+              </div>
+            }>
+           </Route>
+        </Routes>
+      </BrowserRouter>
     </UserLoginStateContext.Provider>
+
   )
 }
 

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import searchIcon from "../images/search-icon.png";
+import { Link } from "react-router-dom";
 
 const NavigationBar = ()=>
 {
@@ -9,7 +10,9 @@ const NavigationBar = ()=>
     <nav>
       <ul className="nav-list">
         <li>
-          <li className="nav-item">Home</li>
+          <Link to="/">
+            <li className="nav-item" to="/">Home</li>
+          </Link>
           <li className="nav-item">Catalog</li>
         </li>
         <li>
@@ -20,8 +23,12 @@ const NavigationBar = ()=>
     </nav> : 
     <nav>
         <ul className="nav-list">
-          <li className="nav-item">Home</li>
-          <li className="nav-item">Catalog</li>
+          <Link to="/">
+            <li className="nav-item">Home</li>
+          </Link>
+          <Link to="/books">
+            <li className="nav-item">Catalog</li>
+          </Link>
           <li className="nav-item">
             <form className="search-bar">
               <button type="submit" className="search-icon-button">
@@ -31,7 +38,9 @@ const NavigationBar = ()=>
             </form>
           </li>
           <li className="nav-item">
+            <Link to="/login">
               <button className="login-button">Login</button>
+            </Link>
           </li>
         </ul>
     </nav>

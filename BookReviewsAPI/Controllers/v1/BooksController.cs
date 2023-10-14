@@ -20,11 +20,12 @@ namespace BookReviewsAPI.Controllers
         public BooksController(BookReviewsDbContext bookReviewsDbContext,
             IConfiguration configuration)
         {
-            _bookReviewsDbContext = bookReviewsDbContext;   
+            _bookReviewsDbContext = bookReviewsDbContext;
             _configuration = configuration;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult GetAllBooks()
         {
             var books = _bookReviewsDbContext.Books;
@@ -36,7 +37,7 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-
+        [AllowAnonymous]
         public ActionResult GetBookById([FromRoute(Name="id")] int id)
         { 
             Book? bookResult;
@@ -59,6 +60,7 @@ namespace BookReviewsAPI.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
+        [AllowAnonymous]
         private void MapBookImageSourceToEndpointPath(Book book)
         {
             if (book.Img is null)
@@ -68,6 +70,7 @@ namespace BookReviewsAPI.Controllers
         }
 
         [HttpGet("img/{name}")]
+        [AllowAnonymous]
         public ActionResult GetImageById([FromRoute(Name = "name")] string name)
         {
             var filePath = $"./Resources/Images/{name}";
