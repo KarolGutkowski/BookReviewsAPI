@@ -90,6 +90,7 @@ namespace BookReviewsAPI.Controllers
             var result = _bookReviewsDbContext.Books
                 .OrderBy(x => Guid.NewGuid())
                 .FirstOrDefault();
+
             if(result is null)
             {
                 return NoContent();
