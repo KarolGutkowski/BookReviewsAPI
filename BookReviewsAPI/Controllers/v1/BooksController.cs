@@ -82,5 +82,21 @@ namespace BookReviewsAPI.Controllers
             Byte[] buffer = System.IO.File.ReadAllBytes(filePath);
             return File(buffer, "image/jpeg");
         }
+
+        [HttpGet("random")]
+        [AllowAnonymous]
+        public ActionResult GetRandomBook()
+        {
+            var result = _bookReviewsDbContext.Books
+                .OrderBy(x => Guid.NewGuid())
+                .FirstOrDefault();
+            if(result is null)
+            {
+                return NoContent();
+            }
+
+            MapBookImageSourceToEndpointPath(result);
+            return Ok(result);
+        }
     }
 }

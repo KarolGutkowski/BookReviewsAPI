@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext} from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import searchIcon from "../images/search-icon.png";
 import { Link } from "react-router-dom";

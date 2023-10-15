@@ -21,8 +21,6 @@ export default function BooksQueryForm()
         }
     }
 
-
-
   return (
     <div>
       {
