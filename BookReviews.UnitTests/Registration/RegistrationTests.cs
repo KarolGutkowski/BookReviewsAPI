@@ -10,8 +10,9 @@ using BookReviews.Infrastructure.Registration;
 using System.Linq;
 using System.Linq.Expressions;
 using System;
+using BookReviews.UnitTests.Utilities;
 
-namespace BookReviews.UnitTests
+namespace BookReviews.UnitTests.Registration
 {
     public class RegistrationTests
     {
@@ -30,11 +31,7 @@ namespace BookReviews.UnitTests
 
             inMemoryUsersList = new List<User>();
 
-            var dbSetMock = new Mock<DbSet<User>>();
-            dbSetMock.As<IQueryable<User>>().Setup(m => m.Provider).Returns(inMemoryUsersList.AsQueryable().Provider);
-            dbSetMock.As<IQueryable<User>>().Setup(m => m.Expression).Returns(inMemoryUsersList.AsQueryable().Expression);
-            dbSetMock.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(inMemoryUsersList.AsQueryable().ElementType);
-            dbSetMock.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(inMemoryUsersList.AsQueryable().GetEnumerator());
+            var dbSetMock = MockDbSetGenerator.CreateMockDbSetWithDataFromEnumerable(inMemoryUsersList);
 
             mockUsersRepository = new Mock<IUsersRepository>();
             mockUsersRepository
