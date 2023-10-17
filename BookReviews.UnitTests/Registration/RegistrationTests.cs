@@ -36,13 +36,7 @@ namespace BookReviews.UnitTests.Registration
             mockUsersRepository = new Mock<IUsersRepository>();
             mockUsersRepository
                 .Setup(s => s.Users)
-                .ReturnsDbSet(dbSetMock.Object);
-
-            // for some reason i have to mock the behaviour in the mockRepository
-            // TODO: get into why it is like that, i would understand if maybe i have to register method in mocked object but im essentially setting up same thing twice
-            mockUsersRepository
-               .Setup(s => s.Users.Add(It.IsAny<User>()))
-               .Callback<User>(s => inMemoryUsersList.Add(s));
+                .Returns(dbSetMock.Object);
         }
 
         [Fact]
