@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace BookReviews.Domain.Models
 {
-    public class BookReviewsDbContext : DbContext
+    public class BookReviewsDbContext : DbContext, IUsersRepository
     {
         private readonly IConfiguration _configuration;
 
@@ -25,6 +25,11 @@ namespace BookReviews.Domain.Models
         public DbSet<Review> Reviews { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }
+
+        public void FinishRegistration()
+        {
+            SaveChanges();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

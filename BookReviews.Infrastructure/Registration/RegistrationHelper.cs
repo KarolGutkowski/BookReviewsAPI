@@ -7,9 +7,9 @@ namespace BookReviews.Infrastructure.Registration;
 
 public class RegistrationHelper : IRegistrationHelper
 {
-    private readonly BookReviewsDbContext _bookReviewsDbContext;
+    private readonly IUsersRepository _bookReviewsDbContext;
     private readonly IPasswordCryptographyHelper _passwordCryptographyHelper;
-    public RegistrationHelper(BookReviewsDbContext bookReviewsDbContext, IPasswordCryptographyHelper passwordCryptographyHelper)
+    public RegistrationHelper(IUsersRepository bookReviewsDbContext, IPasswordCryptographyHelper passwordCryptographyHelper)
     {
         _bookReviewsDbContext = bookReviewsDbContext;
         _passwordCryptographyHelper = passwordCryptographyHelper;
@@ -30,7 +30,7 @@ public class RegistrationHelper : IRegistrationHelper
         }
 
         _bookReviewsDbContext.Users.Add(user);
-        _bookReviewsDbContext.SaveChanges();
+        _bookReviewsDbContext.FinishRegistration();
 
         return true;
     }

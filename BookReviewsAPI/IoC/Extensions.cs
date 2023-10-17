@@ -65,6 +65,7 @@ namespace Microsoft.Extensions
         public static void AddDatabase(this IServiceCollection services)
         {
             services.AddDbContext<BookReviewsDbContext>();
+            services.AddTransient<IUsersRepository, BookReviewsDbContext>();
         }
 
         public static void AddCorsPolicies(this IServiceCollection services)
