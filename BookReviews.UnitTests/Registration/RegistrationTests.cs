@@ -31,13 +31,15 @@ namespace BookReviews.UnitTests.Registration
 
             inMemoryUsersList = new List<User>();
 
-            var dbSetMock = MockDbSetGenerator.CreateMockDbSetWithDataFromEnumerable(inMemoryUsersList);
+            var dbSetMock = MockDbSetGenerator.CreateMockDbSetWithDataFromCollection(inMemoryUsersList);
 
             mockUsersRepository = new Mock<IUsersRepository>();
             mockUsersRepository
                 .Setup(s => s.Users)
                 .ReturnsDbSet(dbSetMock.Object);
 
+            // for some reason i have to mock the behaviour in the mockRepository
+            // TODO: get into why it is like that, i would understand if maybe i have to register method in mocked object but im essentially setting up same thing twice
             mockUsersRepository
                .Setup(s => s.Users.Add(It.IsAny<User>()))
                .Callback<User>(s => inMemoryUsersList.Add(s));
@@ -69,16 +71,16 @@ namespace BookReviews.UnitTests.Registration
         public void RegistrationHelper_ShouldntRegisterExistingUser()
         {
             // arrange
-            var existingUser = new User
+            var user = new User
             {
                 UserName = "user",
                 Password = "1234"
             };
-            inMemoryUsersList.Add(existingUser);
 
             var registrationHelper = new RegistrationHelper(mockUsersRepository.Object, mockCryptographyHelper.Object);
             // act
-            var result = registrationHelper.TryToRegisterUser(existingUser.UserName, existingUser.Password);
+            var firstAttemptResult  = registrationHelper.TryToRegisterUser(user.UserName, user.Password);
+            var result = registrationHelper.TryToRegisterUser(user.UserName, user.Password);
             var usersCount = inMemoryUsersList.Count();
             // assert
             Assert.False(result);

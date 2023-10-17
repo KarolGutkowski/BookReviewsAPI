@@ -11,13 +11,15 @@ namespace BookReviews.UnitTests.Utilities
     public static class MockDbSetGenerator
     {
         public static Mock<DbSet<TEntity>> 
-            CreateMockDbSetWithDataFromEnumerable<TEntity>(IEnumerable<TEntity> enumerable) where TEntity : class
+            CreateMockDbSetWithDataFromCollection<TEntity>(ICollection<TEntity> enumerable) where TEntity : class
         {
             var dbSetMock = new Mock<DbSet<TEntity>>();
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(enumerable.AsQueryable().Provider);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(enumerable.AsQueryable().Expression);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(enumerable.AsQueryable().ElementType);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(enumerable.AsQueryable().GetEnumerator());
+            dbSetMock.Setup(m => m.Add(It.IsAny<TEntity>())).Callback<TEntity>(enumerable.Add);
+
             return dbSetMock;
         }
     }
