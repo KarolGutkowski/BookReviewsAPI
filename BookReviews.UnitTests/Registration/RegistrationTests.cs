@@ -68,7 +68,7 @@ namespace BookReviews.UnitTests.Registration
         }
 
         [Fact]
-        public void RegistrationHelper_ShouldntRegisterExistingUser()
+        public void RegistrationHelper_ShouldntRegisterDuplicateUsers()
         {
             // arrange
             var user = new User
