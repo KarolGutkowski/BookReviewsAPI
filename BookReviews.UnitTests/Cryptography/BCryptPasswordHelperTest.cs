@@ -26,13 +26,15 @@ public class BCryptPasswordHelperTest
         Assert.True(result);
     }
 
-    [Fact]
-    public void PasswordHelper_ShouldRejectIncorrectPassword()
+    [Theory]
+    [InlineData("password", "Password")]
+    [InlineData("password", "password ")]
+    [InlineData("password", " password")]
+    [InlineData("password", "")]
+    public void PasswordHelper_ShouldRejectIncorrectPassword(string password, string incorrectPassword)
     {
         // Arrange
         var bCryptHelper = new BCryptPasswordHelper();
-        var password = "password";
-        var incorrectPassword = "Password";
 
         // Act
         var hashedPassword = bCryptHelper.GenerateHash(password);

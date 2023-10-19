@@ -77,6 +77,7 @@ namespace BookReviews.UnitTests.Registration
             var result = registrationHelper.TryToRegisterUser(user.UserName, user.Password);
             var usersCount = inMemoryUsersList.Count();
             // assert
+            Assert.True(firstAttemptResult);
             Assert.False(result);
             Assert.Equal(1, usersCount);
         }
