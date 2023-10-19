@@ -15,13 +15,16 @@ namespace BookReviewsAPI.Controllers
     public class BooksController : ControllerBase
     {
         //private readonly IBookRepository _bookRepository;
+        private readonly ILogger<BooksController> _logger;
         private readonly IConfiguration _configuration;
         private readonly BookReviewsDbContext _bookReviewsDbContext;
         public BooksController(BookReviewsDbContext bookReviewsDbContext,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ILogger<BooksController> logger)
         {
             _bookReviewsDbContext = bookReviewsDbContext;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -98,6 +101,46 @@ namespace BookReviewsAPI.Controllers
 
             MapBookImageSourceToEndpointPath(result);
             return Ok(result);
+        }
+
+
+        [HttpPost("liked/{id:int}")]
+        public ActionResult AddLikedBook([FromRoute(Name = "id")] int id)
+        {
+            var userIdentity = HttpContext.User.Claims.FirstOrDefault(x => x.Type == AuthenticationPoliciesConsts.DefaultUserAuth);
+            if(userIdentity is null)
+                return Unauthorized();
+
+            User? user;
+            try
+            {
+                user = _bookReviewsDbContext.Users
+                    .Where(u => u.UserName == userIdentity.Value)
+                    .SingleOrDefault();
+            }catch(InvalidOperationException ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+
+            if(user is null)
+            {
+                return Unauthorized();
+            }
+
+            var book = _bookReviewsDbContext.Books.Where(b => b.Id == id).FirstOrDefault();
+            if(book is null)
+            {
+                return NotFound();
+            }    
+
+            if(user.LikedBooks is null)
+                user.LikedBooks = new List<Book>();
+
+            user.LikedBooks.Add(book);
+            _bookReviewsDbContext.SaveChanges();
+
+            return Ok();
         }
     }
 }
