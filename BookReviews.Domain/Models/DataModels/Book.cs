@@ -14,4 +14,7 @@ public class Book
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ICollection<Review>? Reviews { get; set; }
     public string? Img { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<User>? LikedByUsers { get; set; }
 }

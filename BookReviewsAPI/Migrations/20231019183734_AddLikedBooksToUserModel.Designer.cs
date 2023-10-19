@@ -4,6 +4,7 @@ using BookReviews.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookReviewsAPI.Migrations
 {
     [DbContext(typeof(BookReviewsDbContext))]
-    partial class BookReviewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231019183734_AddLikedBooksToUserModel")]
+    partial class AddLikedBooksToUserModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,10 +79,15 @@ namespace BookReviewsAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Books");
                 });
@@ -138,21 +146,6 @@ namespace BookReviewsAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BookUser", b =>
-                {
-                    b.Property<int>("LikedBooksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LikedByUsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("LikedBooksId", "LikedByUsersId");
-
-                    b.HasIndex("LikedByUsersId");
-
-                    b.ToTable("BookUser");
-                });
-
             modelBuilder.Entity("AuthorBook", b =>
                 {
                     b.HasOne("BookReviews.Domain.Models.DataModels.Author", null)
@@ -166,6 +159,13 @@ namespace BookReviewsAPI.Migrations
                         .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BookReviews.Domain.Models.DataModels.Book", b =>
+                {
+                    b.HasOne("BookReviews.Domain.Models.DataModels.User", null)
+                        .WithMany("LikedBooks")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("BookReviews.Domain.Models.DataModels.Review", b =>
@@ -187,24 +187,14 @@ namespace BookReviewsAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BookUser", b =>
-                {
-                    b.HasOne("BookReviews.Domain.Models.DataModels.Book", null)
-                        .WithMany()
-                        .HasForeignKey("LikedBooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookReviews.Domain.Models.DataModels.User", null)
-                        .WithMany()
-                        .HasForeignKey("LikedByUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BookReviews.Domain.Models.DataModels.Book", b =>
                 {
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("BookReviews.Domain.Models.DataModels.User", b =>
+                {
+                    b.Navigation("LikedBooks");
                 });
 #pragma warning restore 612, 618
         }
