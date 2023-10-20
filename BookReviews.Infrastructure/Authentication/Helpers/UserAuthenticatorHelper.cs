@@ -1,5 +1,6 @@
 ﻿using BookReviews.Domain.Models;
 using BookReviews.Domain.Models.DataModels;
+using BookReviews.Domain.Models.DTOs;
 using BookReviews.Infrastructure.Cryptography;
 using Microsoft.Extensions.Logging;
 
@@ -21,9 +22,9 @@ public class UserAuthenticatonHelper : IUserAuthenticationHelper
         _passwordCryptographyHelper = passwordCryptographyHelper;
     }
 
-    public bool IsAuthenticatedUser(User user)
+    public bool IsAuthenticatedUser(Domain.Models.DTOs.UserDTO user)
     {
-        User? matchedUser = null;
+        Domain.Models.DataModels.User? matchedUser = null;
         try
         {
             matchedUser = _bookReviewsDbContext.Users.SingleOrDefault(x => x.UserName == user.UserName);

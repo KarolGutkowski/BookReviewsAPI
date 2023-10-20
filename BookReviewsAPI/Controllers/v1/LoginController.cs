@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using BookReviews.Infrastructure.Authentication.Helpers;
 using BookReviews.Infrastructure.Authentication.Schemas;
-using BookReviews.Domain.Models.DataModels;
+using BookReviews.Domain.Models.DTOs;
 
 namespace BookReviewsAPI.Controllers.v1
 {
@@ -29,7 +29,7 @@ namespace BookReviewsAPI.Controllers.v1
         }
 
         [HttpPost]
-        public ActionResult Login([FromBody] User user)
+        public ActionResult Login([FromBody] UserDTO user)
         {
             if (!_userAuthenticationHelper.IsAuthenticatedUser(user))
                 return Unauthorized();

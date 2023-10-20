@@ -1,4 +1,4 @@
-﻿using BookReviews.Domain.Models.DataModels;
+﻿using BookReviews.Domain.Models.DTOs;
 using BookReviews.Infrastructure.Authentication.Policies;
 using BookReviews.Infrastructure.Authentication.Schemas;
 using System.Security.Claims;
@@ -7,7 +7,7 @@ namespace BookReviews.Infrastructure.Authentication.Helpers;
 
 public class UserClaimsHelper : IClaimsHelper
 {
-    public ClaimsPrincipal GenerateUserClaimsPrincipal(User user, string claimsSchema = AuthenticationSchemasConsts.DefaultSchema)
+    public ClaimsPrincipal GenerateUserClaimsPrincipal(UserDTO user, string claimsSchema = AuthenticationSchemasConsts.DefaultSchema)
     {
         var claims = new List<Claim>
         {

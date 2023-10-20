@@ -1,8 +1,8 @@
-﻿using BookReviews.Domain.Models.DataModels;
+﻿using BookReviews.Domain.Models.DTOs;
 
 namespace BookReviews.Infrastructure.Authentication.Helpers;
 
 public interface IUserAuthenticationHelper
 {
-    bool IsAuthenticatedUser(User user);
+    bool IsAuthenticatedUser(UserDTO user);
 }

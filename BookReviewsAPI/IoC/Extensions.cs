@@ -6,7 +6,7 @@ using BookReviews.Infrastructure.Cryptography;
 using BookReviews.Infrastructure.Registration;
 using BookReviews.WebAPI.Consts;
 using BookReviewsAPI.Registration;
-
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Extensions
 {
@@ -23,7 +23,11 @@ namespace Microsoft.Extensions
                 options.ReportApiVersions = true;
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(opt=>
+                {
+                    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                });
             services.AddSwaggerGen();
             services.AddDatabase();
 

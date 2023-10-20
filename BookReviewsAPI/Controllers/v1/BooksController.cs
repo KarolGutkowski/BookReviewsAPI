@@ -32,7 +32,7 @@ namespace BookReviewsAPI.Controllers
         public ActionResult GetAllBooks()
         {
             var books = _bookReviewsDbContext.Books;
-            foreach(var book in books)
+            foreach (var book in books)
             {
                 MapBookImageSourceToEndpointPath(book);
             }
@@ -41,8 +41,8 @@ namespace BookReviewsAPI.Controllers
 
         [HttpGet("{id:int}")]
         [AllowAnonymous]
-        public ActionResult GetBookById([FromRoute(Name="id")] int id)
-        { 
+        public ActionResult GetBookById([FromRoute(Name = "id")] int id)
+        {
             Book? bookResult;
             try
             {
@@ -51,7 +51,7 @@ namespace BookReviewsAPI.Controllers
                     .Include(b => b.Reviews)
                     .SingleOrDefault(b => b.Id == id);
             }
-            catch(InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return NotFound();
             }
@@ -77,7 +77,7 @@ namespace BookReviewsAPI.Controllers
         public ActionResult GetImageById([FromRoute(Name = "name")] string name)
         {
             var filePath = $"./Resources/Images/{name}";
-            if(!System.IO.File.Exists(filePath))
+            if (!System.IO.File.Exists(filePath))
             {
                 filePath = $"./Resources/Images/placeholder.jpeg";
             }
@@ -94,7 +94,7 @@ namespace BookReviewsAPI.Controllers
                 .OrderBy(x => Guid.NewGuid())
                 .FirstOrDefault();
 
-            if(result is null)
+            if (result is null)
             {
                 return NoContent();
             }
@@ -107,40 +107,105 @@ namespace BookReviewsAPI.Controllers
         [HttpPost("liked/{id:int}")]
         public ActionResult AddLikedBook([FromRoute(Name = "id")] int id)
         {
-            var userIdentity = HttpContext.User.Claims.FirstOrDefault(x => x.Type == AuthenticationPoliciesConsts.DefaultUserAuth);
-            if(userIdentity is null)
-                return Unauthorized();
-
             User? user;
+            (var isOk, var response, user) = CheckUserCredentials();
+
+            if(!isOk)
+            {
+                return response;
+            }
+
+            var book = _bookReviewsDbContext.Books
+                .Where(b => b.Id == id)
+                .FirstOrDefault();
+
+            if (book is null)
+            {
+                return NotFound();
+            }
+
+            var bookLikes = book.LikedByUsers;
+            if (user.LikedBooks is null)
+            {
+                user.LikedBooks = new List<Book>();
+            }
+
+            user.LikedBooks.Add(book);
+
+            _bookReviewsDbContext.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpGet("liked")]
+        public ActionResult GetLikedBooks()
+        {
+            User? user;
+            (var isOk, var response, user) = CheckUserCredentials();
+
+            if (!isOk)
+            {
+                return response;
+            }
+
+            if (user.LikedBooks is null)
+                return NoContent();
+
+            var userLikedBooks = user.LikedBooks;
+            return Ok(userLikedBooks);
+        }
+
+        [HttpGet("liked/{id:int}")]
+        public ActionResult GetLikedBooks([FromRoute(Name ="id")] int id)
+        {
+            User? user;
+            (var isOk, var response, user) = CheckUserCredentials();
+
+            if (!isOk)
+            {
+                return response;
+            }
+
+            if (user.LikedBooks is null)
+                return NoContent();
+
+            var userLikedBooks = user.LikedBooks;
+
+            var bookWithGivenId = userLikedBooks.FirstOrDefault(x => x.Id == id);
+
+            if (bookWithGivenId is null)
+                return NoContent();
+
+            return Ok(bookWithGivenId);
+        }
+
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public (bool isOk, ActionResult, User?) CheckUserCredentials()
+        {
+            User? user;
+            var userIdentity = HttpContext.User.Claims.FirstOrDefault(x => x.Type == AuthenticationPoliciesConsts.DefaultUserAuth);
+            if (userIdentity is null)
+                return (false, Unauthorized(), null);
+
             try
             {
                 user = _bookReviewsDbContext.Users
                     .Where(u => u.UserName == userIdentity.Value)
+                    .Include(u => u.LikedBooks)
                     .SingleOrDefault();
-            }catch(InvalidOperationException ex)
+            }
+            catch (InvalidOperationException ex)
             {
                 _logger.LogError(ex.Message);
-                return StatusCode(500);
+                return (false, StatusCode(500), null);
             }
 
-            if(user is null)
+            if (user is null)
             {
-                return Unauthorized();
+                return (false, Unauthorized(), null);
             }
-
-            var book = _bookReviewsDbContext.Books.Where(b => b.Id == id).FirstOrDefault();
-            if(book is null)
-            {
-                return NotFound();
-            }    
-
-            if(user.LikedBooks is null)
-                user.LikedBooks = new List<Book>();
-
-            user.LikedBooks.Add(book);
-            _bookReviewsDbContext.SaveChanges();
-
-            return Ok();
+            return (true, Ok(), user);
         }
     }
 }

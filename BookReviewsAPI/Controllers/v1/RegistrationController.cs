@@ -1,4 +1,4 @@
-﻿using BookReviews.Domain.Models.DataModels;
+﻿using BookReviews.Domain.Models.DTOs;
 using BookReviewsAPI.Registration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +28,7 @@ namespace BookReviewsAPI.Controllers.v1
 
 
         [HttpPost]
-        public ActionResult Register([FromBody] User user)
+        public ActionResult Register([FromBody] UserDTO user)
         {
             return _registrationHelper.TryToRegisterUser(user.UserName, user.Password) ? Ok() : Conflict();
         }
