@@ -8,8 +8,8 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Book from './Components/Book';
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const loggedInState = {loggedIn, setLoggedIn}
+  const [userName, setLoggedIn] = useState(null);
+  const loggedInState = {userName, setLoggedIn}
   const [book, setBook] = useState(null);
 
   useEffect(()=>

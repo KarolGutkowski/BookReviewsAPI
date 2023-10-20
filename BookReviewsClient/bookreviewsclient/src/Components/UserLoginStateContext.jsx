@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const UserLoginStateContext = createContext(
     {
-        isLoggedIn: false,
+        userName: null,
         setLoggedIn: ()=> {}
     });
 

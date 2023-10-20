@@ -176,3 +176,9 @@ a
 {
   text-decoration: none;
 }
+
+.liked-book-icon
+{
+  height: 50px;
+  width: 50px;
+}

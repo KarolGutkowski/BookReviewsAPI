@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 
 const NavigationBar = ()=>
 {
-    const {loggedIn,setLoggedIn} = useContext(UserLoginStateContext);
-    console.log("isLoggedIn:", loggedIn);
+    const {userName,setLoggedIn} = useContext(UserLoginStateContext);
+    console.log("isLoggedIn:", userName);
 
     const item = 
       <nav>
@@ -26,8 +26,8 @@ const NavigationBar = ()=>
               </form>
             </li>
             <li className="nav-item">
-            {loggedIn?
-              <Link to="/" onClick={()=>setLoggedIn(false)}>
+            {userName?
+              <Link to="/" onClick={()=>setLoggedIn(null)}>
                 <li className="nav-item">Logout</li>
               </Link>:
               <Link to="/login">

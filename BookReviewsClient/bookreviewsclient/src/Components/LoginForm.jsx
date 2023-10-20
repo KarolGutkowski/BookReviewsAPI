@@ -1,15 +1,16 @@
 import React from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import { useContext } from "react";
+import {Navigate} from "react-router-dom"
 
 export default function LoginForm()
 {
-    const {_,setLoggedIn}= useContext(UserLoginStateContext);
+    const {userName,setLoggedIn}= useContext(UserLoginStateContext);
 
     async function LoginUser(e)
     {
         e.preventDefault();
-
+        debugger;
         const form = e.target;
         const formData = new FormData(form);
 
@@ -27,12 +28,16 @@ export default function LoginForm()
             e.preventDefault();
             if(response.status === 200)
             {
-                setLoggedIn(true);
+                console.log(userName);
+                setLoggedIn(userName);
             }
         })      
     }
 
     return (
+        <>
+        {userName?
+        <Navigate from="/login" to="/"/>:
         <form onSubmit={LoginUser} method="post" className="login-form">
             <label htmlFor="login">
                 Login:
@@ -45,5 +50,7 @@ export default function LoginForm()
             <input type="password" name="password"/>
             <button>Log In</button>
         </form>
+        }
+        </>      
     );
 }
