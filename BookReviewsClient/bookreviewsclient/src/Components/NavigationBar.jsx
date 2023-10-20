@@ -31,7 +31,7 @@ const NavigationBar = ()=>
                 <li className="nav-item">Logout</li>
               </Link>:
               <Link to="/login">
-                <button className="login-button">Login</button>
+                <button className="login-button">Sign In</button>
               </Link>
             }
             </li>

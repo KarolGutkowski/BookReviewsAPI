@@ -1,7 +1,7 @@
 import React from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import { useContext } from "react";
-import {Navigate} from "react-router-dom"
+import {Navigate, Link} from "react-router-dom"
 
 export default function LoginForm()
 {
@@ -35,22 +35,18 @@ export default function LoginForm()
     }
 
     return (
-        <>
+        <div className="form-container">
         {userName?
         <Navigate from="/login" to="/"/>:
-        <form onSubmit={LoginUser} method="post" className="login-form">
-            <label htmlFor="login">
-                Login:
-            </label>
-            <input type="text" name="login"/>
-
-            <label htmlFor="password">
-                Password:
-            </label>
-            <input type="password" name="password"/>
-            <button>Log In</button>
+        <form onSubmit={LoginUser} method="post" className="app-form">
+            <input type="text" name="login" placeholder="username" className="login-input"/>
+            <input type="password" name="password" placeholder="•••••••••" id="password-input" className="login-input"/>
+            <button className="form-button" >Log In</button>
         </form>
         }
-        </>      
+        <Link to="/registration">
+            <p>Register</p>
+        </Link>
+        </div>      
     );
 }

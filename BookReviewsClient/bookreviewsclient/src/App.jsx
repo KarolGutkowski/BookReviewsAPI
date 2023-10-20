@@ -6,6 +6,7 @@ import LoginForm from './Components/LoginForm';
 import NavigationBar from './Components/NavigationBar';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Book from './Components/Book';
+import RegistrationForm from './Components/Register';
 
 function App() {
   const [userName, setLoggedIn] = useState(null);
@@ -26,23 +27,24 @@ function App() {
     <UserLoginStateContext.Provider value={loggedInState}>
       <BrowserRouter>
       <NavigationBar/>
+      <div className="content-container">
         <Routes>
             <Route path="/login" element={
-              <div className="content-container">
                 <LoginForm/>
-              </div>}/>
+                }/>
             <Route path="/books" element={
-              <div className="content-container">
                 <BooksQueryForm/>
-              </div>
             }>
            </Route>
            <Route path="/" element = {
-              <div className="content-container">
-                {book?<Book key={book.id} props={book}/>:null}
-              </div>
+                book?<Book key={book.id} props={book}/>:null
             }/>
+            <Route path="/registration" element={
+              <RegistrationForm />
+            }>
+            </Route>
         </Routes>
+        </div>
       </BrowserRouter>
     </UserLoginStateContext.Provider>
 
