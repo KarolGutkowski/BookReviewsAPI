@@ -18,7 +18,8 @@ const Book = ({props})=>
             fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
                                     method: "GET",
                                     credentials: "include",
-            }).then((response)=>
+            })
+            .then((response)=>
             {
                 if(response.status === 200)
                 {
@@ -26,6 +27,10 @@ const Book = ({props})=>
                 }else{
                     setLikedByUser(false)
                 }
+            })
+            .catch((err) =>
+            {
+                console.log("Error while fetching data:" + err);
             })
         }
     },[userName]);
