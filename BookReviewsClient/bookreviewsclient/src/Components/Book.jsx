@@ -12,40 +12,50 @@ const Book = ({props})=>
 
     useEffect(()=>
     {
-        const id = props.id;
-        fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
-                                method: "GET",
-                                credentials: "include",
-        }).then((response)=>
+        if(userName)
         {
-            if(response.status === 200)
+            const id = props.id;
+            fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
+                                    method: "GET",
+                                    credentials: "include",
+            }).then((response)=>
             {
-                setLikedByUser(true);
-            }else{
-                setLikedByUser(false)
-            }
-        })
+                if(response.status === 200)
+                {
+                    setLikedByUser(true);
+                }else{
+                    setLikedByUser(false)
+                }
+            })
+        }
     },[userName]);
 
     function handleUserClickedHeart()
     {
-        if(likedByUser)
-            return; //for now we ignore clicking on loved books, no backend functionality for that yet
-
         const id = props.id;
-        fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
-            method: "POST",
-            credentials: "include",
-            body:JSON.stringify({id}),
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }).then((response)=>{
-            if(response.status === 200)
-            {
-                setLikedByUser(true);
-            }
-        })
+        if(likedByUser)
+        {
+            fetch(`https://localhost:7235/api/v1/books/liked/remove/${id}`,{
+                method: "PATCH",
+                credentials: "include",
+            }).then((response)=>{
+                if(response.status === 200)
+                {
+                    setLikedByUser(false);
+                }
+            })
+        }else
+        {
+            fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
+                method: "POST",
+                credentials: "include"
+            }).then((response)=>{
+                if(response.status === 200)
+                {
+                    setLikedByUser(true);
+                }
+            })
+        }
     }
 
     return (
