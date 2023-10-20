@@ -179,6 +179,34 @@ namespace BookReviewsAPI.Controllers
             return Ok(bookWithGivenId);
         }
 
+        [HttpPatch("liked/remove/{id:int}")]
+        public ActionResult RemoveFromUserLikedBooks([FromRoute(Name = "id")] int id)
+        {
+            User? user;
+            (var isOk, var response, user) = CheckUserCredentials();
+
+            if (!isOk)
+            {
+                return response;
+            }
+
+            if (user.LikedBooks is null)
+                return Ok();
+
+            var book = _bookReviewsDbContext.Books
+               .Where(b => b.Id == id)
+               .FirstOrDefault();
+
+            if (book is null)
+            {
+                return Ok();
+            }
+
+            user.LikedBooks.Remove(book);
+            _bookReviewsDbContext.SaveChanges();
+            return Ok();
+        }
+
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public (bool isOk, ActionResult, User?) CheckUserCredentials()
