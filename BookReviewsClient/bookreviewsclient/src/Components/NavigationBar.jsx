@@ -17,6 +17,11 @@ const NavigationBar = ()=>
             <Link to="/books">
               <li className="nav-item">Catalog</li>
             </Link>
+            {userName?
+            <Link to="/profile">
+                <li className="nav-item">Profile</li>
+              </Link>:
+            null}
             <li className="nav-item">
               <form className="search-bar">
                 <button type="submit" className="search-icon-button">
@@ -27,7 +32,11 @@ const NavigationBar = ()=>
             </li>
             <li className="nav-item">
             {userName?
-              <Link to="/" onClick={()=>setLoggedIn(null)}>
+              <Link to="/" onClick={()=>
+              {
+                document.cookie = '<.AspNetCore.Cookies>=; max-age=0;secure;path=<requiredpath>';
+                setLoggedIn(null);
+              }}>
                 <li className="nav-item">Logout</li>
               </Link>:
               <Link to="/login">

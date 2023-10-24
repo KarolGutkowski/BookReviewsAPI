@@ -7,6 +7,7 @@ import NavigationBar from './Components/NavigationBar';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Book from './Components/Book';
 import RegistrationForm from './Components/Register';
+import UserProfile from './Components/UserProfile';
 
 function App() {
   const [userName, setLoggedIn] = useState(null);
@@ -41,6 +42,11 @@ function App() {
             }/>
             <Route path="/registration" element={
               <RegistrationForm />
+            }>
+            </Route>
+
+            <Route path="/profile" element={
+              <UserProfile />
             }>
             </Route>
         </Routes>
