@@ -3,8 +3,9 @@ import UserLoginStateContext from "./UserLoginStateContext";
 
 const UserProfile = (props) =>
 {
-    const loginContext = useContext(UserLoginStateContext)
-    const {userName}= loginContext;
+    const {userName} = useContext(UserLoginStateContext)
+
+    
     return (
         userName?
         <p>{userName}</p>:

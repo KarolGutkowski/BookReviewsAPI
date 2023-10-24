@@ -10,7 +10,6 @@ export default function LoginForm()
     async function LoginUser(e)
     {
         e.preventDefault();
-        debugger;
         const form = e.target;
         const formData = new FormData(form);
 

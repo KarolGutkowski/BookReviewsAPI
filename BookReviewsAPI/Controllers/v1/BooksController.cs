@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using BookReviews.Domain.Models;
 using BookReviews.Infrastructure.Authentication.Policies;
 using BookReviews.Domain.Models.DataModels;
+using BookReviews.Infrastructure.Authentication.Helpers;
 
 namespace BookReviewsAPI.Controllers
 {
@@ -18,13 +19,16 @@ namespace BookReviewsAPI.Controllers
         private readonly ILogger<BooksController> _logger;
         private readonly IConfiguration _configuration;
         private readonly BookReviewsDbContext _bookReviewsDbContext;
+        private readonly IClaimsHelper _userClaimsHelper;
         public BooksController(BookReviewsDbContext bookReviewsDbContext,
             IConfiguration configuration,
-            ILogger<BooksController> logger)
+            ILogger<BooksController> logger,
+            IClaimsHelper userClaimsHelper)
         {
             _bookReviewsDbContext = bookReviewsDbContext;
             _configuration = configuration;
             _logger = logger;
+            _userClaimsHelper = userClaimsHelper;
         }
 
         [HttpGet]
@@ -107,13 +111,18 @@ namespace BookReviewsAPI.Controllers
         [HttpPost("liked/{id:int}")]
         public ActionResult AddLikedBook([FromRoute(Name = "id")] int id)
         {
-            User? user;
-            (var isOk, var response, user) = CheckUserCredentials();
+            var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
 
-            if(!isOk)
-            {
-                return response;
-            }
+            if (userAccount is null)
+                return Unauthorized();
+
+            var user = _bookReviewsDbContext.Users
+                .Where(u => u.Id == userAccount.Id)
+                .Include(u => u.LikedBooks)
+                .FirstOrDefault();
+
+            if (user is null)
+                return StatusCode(501);
 
             var book = _bookReviewsDbContext.Books
                 .Where(b => b.Id == id)
@@ -140,13 +149,18 @@ namespace BookReviewsAPI.Controllers
         [HttpGet("liked")]
         public ActionResult GetLikedBooks()
         {
-            User? user;
-            (var isOk, var response, user) = CheckUserCredentials();
+            var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
 
-            if (!isOk)
-            {
-                return response;
-            }
+            if (userAccount is null)
+                return Unauthorized();
+
+            var user = _bookReviewsDbContext.Users
+                .Where(u => u.Id == userAccount.Id)
+                .Include(u => u.LikedBooks)
+                .FirstOrDefault();
+
+            if (user is null)
+                return StatusCode(501);
 
             if (user.LikedBooks is null)
                 return NoContent();
@@ -158,13 +172,18 @@ namespace BookReviewsAPI.Controllers
         [HttpGet("liked/{id:int}")]
         public ActionResult GetLikedBooks([FromRoute(Name ="id")] int id)
         {
-            User? user;
-            (var isOk, var response, user) = CheckUserCredentials();
+            var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
 
-            if (!isOk)
-            {
-                return response;
-            }
+            if (userAccount is null)
+                return Unauthorized();
+
+            var user = _bookReviewsDbContext.Users
+                .Where(u => u.Id == userAccount.Id)
+                .Include(u => u.LikedBooks)
+                .FirstOrDefault();
+
+            if (user is null)
+                return StatusCode(501);
 
             if (user.LikedBooks is null)
                 return NoContent();
@@ -182,13 +201,18 @@ namespace BookReviewsAPI.Controllers
         [HttpPatch("liked/remove/{id:int}")]
         public ActionResult RemoveFromUserLikedBooks([FromRoute(Name = "id")] int id)
         {
-            User? user;
-            (var isOk, var response, user) = CheckUserCredentials();
+            var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
 
-            if (!isOk)
-            {
-                return response;
-            }
+            if (userAccount is null)
+                return Unauthorized();
+
+            var user = _bookReviewsDbContext.Users
+                .Where(u => u.Id == userAccount.Id)
+                .Include(u => u.LikedBooks)
+                .FirstOrDefault();
+
+            if (user is null)
+                return StatusCode(501);
 
             if (user.LikedBooks is null)
                 return Ok();
@@ -205,35 +229,6 @@ namespace BookReviewsAPI.Controllers
             user.LikedBooks.Remove(book);
             _bookReviewsDbContext.SaveChanges();
             return Ok();
-        }
-
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public (bool isOk, ActionResult, User?) CheckUserCredentials()
-        {
-            User? user;
-            var userIdentity = HttpContext.User.Claims.FirstOrDefault(x => x.Type == AuthenticationPoliciesConsts.DefaultUserAuth);
-            if (userIdentity is null)
-                return (false, Unauthorized(), null);
-
-            try
-            {
-                user = _bookReviewsDbContext.Users
-                    .Where(u => u.UserName == userIdentity.Value)
-                    .Include(u => u.LikedBooks)
-                    .SingleOrDefault();
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.LogError(ex.Message);
-                return (false, StatusCode(500), null);
-            }
-
-            if (user is null)
-            {
-                return (false, Unauthorized(), null);
-            }
-            return (true, Ok(), user);
-        }
+        }     
     }
 }
