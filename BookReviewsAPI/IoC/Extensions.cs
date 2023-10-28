@@ -32,6 +32,7 @@ namespace Microsoft.Extensions
             services.AddDatabase();
 
             services.AddCorsPolicies();
+            services.AddHealthChecks();
         }
 
         public static void AddHelpers(this IServiceCollection services)
