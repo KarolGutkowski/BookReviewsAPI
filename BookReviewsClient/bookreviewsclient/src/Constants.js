@@ -1,6 +1,6 @@
 const production = 
 {
-    url: 'bookreviewsapi.azurewebsites.net'
+    url: 'https://bookreviewsapi.azurewebsites.net/'
 }
 
 const development = {

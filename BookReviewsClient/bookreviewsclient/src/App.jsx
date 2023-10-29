@@ -8,6 +8,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Book from './Components/Book';
 import RegistrationForm from './Components/Register';
 import UserProfile from './Components/UserProfile';
+import {config} from "./Constants"
 
 function App() {
   const [userName, setLoggedIn] = useState(null);
@@ -16,7 +17,7 @@ function App() {
 
   useEffect(()=>
   {
-    fetch("https://localhost:7235/api/v1/books/random",
+    fetch(`${config.url}/api/v1/books/random`,
     {
         credentials: "include",
     })
