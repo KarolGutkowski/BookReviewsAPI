@@ -34,6 +34,7 @@ namespace BookReviewsAPI.Controllers
         [AllowAnonymous]
         public ActionResult GetAllBooks()
         {
+            _logger.LogInformation("User requested all books");
             var books = _bookReviewsDbContext.Books;
             foreach (var book in books)
             {
