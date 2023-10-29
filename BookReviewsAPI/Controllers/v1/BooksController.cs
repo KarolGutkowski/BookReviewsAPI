@@ -31,6 +31,13 @@ namespace BookReviewsAPI.Controllers
             _userClaimsHelper = userClaimsHelper;
         }
 
+        [HttpGet("test")]
+        [AllowAnonymous]
+        public ActionResult GetTest()
+        {
+            return Ok("test OK");
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public ActionResult GetAllBooks()
