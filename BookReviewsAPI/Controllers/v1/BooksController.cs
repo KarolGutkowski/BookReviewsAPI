@@ -35,7 +35,6 @@ namespace BookReviewsAPI.Controllers
         [AllowAnonymous]
         public ActionResult GetAllBooks()
         {
-            _logger.LogInformation("User requested all books");
             var books = _bookReviewsDbContext.Books;
             foreach (var book in books)
             {
@@ -48,7 +47,6 @@ namespace BookReviewsAPI.Controllers
         [AllowAnonymous]
         public ActionResult GetBookById([FromRoute(Name = "id")] int id)
         {
-            _logger.LogInformation($"User requested book id={id}");
             Book? bookResult;
             try
             {
