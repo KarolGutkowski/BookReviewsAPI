@@ -35,7 +35,7 @@ namespace BookReviewsAPI.Controllers
         [AllowAnonymous]
         public ActionResult GetTest()
         {
-            return Ok("test OK");
+            return Ok(_configuration.GetConnectionString("BooksReviews"));
         }
 
         [HttpGet]
