@@ -1,6 +1,5 @@
 using Microsoft.Extensions;
 using BookReviews.WebAPI.Consts;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +12,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHealthChecks("/hc");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
