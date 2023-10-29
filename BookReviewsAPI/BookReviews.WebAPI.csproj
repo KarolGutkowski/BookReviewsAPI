@@ -19,9 +19,16 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.Threading.RateLimiting" Version="7.0.1" />
   </ItemGroup>
+	
 
   <ItemGroup>
     <ProjectReference Include="..\BookReviews.Infrastructure\BookReviews.Infrastructure.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Resources\Images\*.*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>
