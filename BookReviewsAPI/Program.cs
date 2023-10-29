@@ -14,14 +14,13 @@ app.UseHealthChecks("/hc");
 
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
-//}
+}
 
 app.UseCors(CorsPolicyConsts.AllowLocalhostClient);
-app.UseCors("azure test policy");
 
 app.UseHttpsRedirection();
 
