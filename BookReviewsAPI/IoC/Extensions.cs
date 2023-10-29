@@ -91,8 +91,7 @@ namespace Microsoft.Extensions
                                 {
                                     policy.AllowAnyOrigin()
                                     .AllowAnyMethod()
-                                    .AllowAnyHeader()
-                                    .AllowCredentials();
+                                    .AllowAnyHeader();
                                 });
             });
         }
