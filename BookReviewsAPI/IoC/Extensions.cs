@@ -85,6 +85,15 @@ namespace Microsoft.Extensions
                                       .AllowAnyMethod()
                                       .AllowCredentials();
                                   });
+
+                options.AddPolicy(name: "azure test policy",
+                                policy =>
+                                {
+                                    policy.AllowAnyOrigin()
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader()
+                                    .AllowCredentials();
+                                });
             });
         }
     }
