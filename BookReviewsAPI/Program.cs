@@ -4,7 +4,10 @@ using BookReviews.WebAPI.Consts;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddServivces();
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddSqlServer(
+    builder.Configuration.GetConnectionString("BooksReviews"), 
+    name: "BooksReviewsDB");
 
 
 var app = builder.Build();
