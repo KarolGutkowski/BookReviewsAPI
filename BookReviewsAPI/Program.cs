@@ -4,11 +4,7 @@ using BookReviews.WebAPI.Consts;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddServivces();
-builder.Services.AddHealthChecks()
-    .AddSqlServer(
-    builder.Configuration.GetConnectionString("BooksReviews"), 
-    name: "BooksReviewsDB");
-
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 app.UseCors();
