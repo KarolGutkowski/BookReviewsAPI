@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import heartFilled from "../images/heart-filled-icon.png"
 import heartEmpty from "../images/heart-empty-icon.png"
-
+import {config} from "../Constants"
 
 
 const Book = ({props})=>
@@ -15,7 +15,7 @@ const Book = ({props})=>
         if(userName)
         {
             const id = props.id;
-            fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
+            fetch(`${config.url}/api/v1/books/liked/${id}`,{
                                     method: "GET",
                                     credentials: "include",
             })
@@ -40,7 +40,7 @@ const Book = ({props})=>
         const id = props.id;
         if(likedByUser)
         {
-            fetch(`https://localhost:7235/api/v1/books/liked/remove/${id}`,{
+            fetch(`${config.url}/api/v1/books/liked/remove/${id}`,{
                 method: "PATCH",
                 credentials: "include",
             }).then((response)=>{
@@ -51,7 +51,7 @@ const Book = ({props})=>
             })
         }else
         {
-            fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
+            fetch(`${config.url}/api/v1/books/liked/${id}`,{
                 method: "POST",
                 credentials: "include"
             }).then((response)=>{

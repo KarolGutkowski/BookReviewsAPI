@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import Book from "./Book";
+import {config} from "../Constants"
 
 export default function BooksQueryForm()
 {
@@ -9,7 +10,7 @@ export default function BooksQueryForm()
     {
         event.preventDefault();
         try{
-            const response = await fetch("https://localhost:7235/api/v1/books",
+            const response = await fetch(`${config.url}/api/v1/books`,
             {
               credentials: "include",
             });

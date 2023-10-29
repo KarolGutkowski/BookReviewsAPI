@@ -2,6 +2,7 @@ import React from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import { useContext } from "react";
 import {Navigate, Link} from "react-router-dom"
+import {config} from "../Constants"
 
 export default function LoginForm()
 {
@@ -15,7 +16,7 @@ export default function LoginForm()
 
         const userName = formData.get("login");
         const password = formData.get("password");
-        await fetch("https://localhost:7235/api/v1/login",{
+        await fetch(`${config.url}/api/v1/login`,{
                                 method: "POST",
                                 credentials: "include",
                                 body:JSON.stringify({userName, password}),
