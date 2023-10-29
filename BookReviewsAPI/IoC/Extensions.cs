@@ -6,6 +6,7 @@ using BookReviews.Infrastructure.Cryptography;
 using BookReviews.Infrastructure.Registration;
 using BookReviews.WebAPI.Consts;
 using BookReviewsAPI.Registration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Extensions
@@ -32,7 +33,7 @@ namespace Microsoft.Extensions
             services.AddDatabase();
 
             services.AddCorsPolicies();
-            services.AddHealthChecks();
+            //services.AddHealthChecks()
         }
 
         public static void AddHelpers(this IServiceCollection services)
