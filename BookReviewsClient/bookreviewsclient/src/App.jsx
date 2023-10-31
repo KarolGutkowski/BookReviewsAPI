@@ -9,6 +9,7 @@ import Book from './Components/Book';
 import RegistrationForm from './Components/Register';
 import UserProfile from './Components/UserProfile';
 import {config} from "./Constants"
+import BookDetails from './Components/BookDetails';
 
 function App() {
   const [userName, setLoggedIn] = useState(null);
@@ -50,6 +51,10 @@ function App() {
               <UserProfile />
             }>
             </Route>
+
+            <Route path="/book/:id" element={
+                <BookDetails />
+                }/>
         </Routes>
         </div>
       </BrowserRouter>

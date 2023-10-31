@@ -3,6 +3,7 @@ import UserLoginStateContext from "./UserLoginStateContext";
 import heartFilled from "../images/heart-filled-icon.png"
 import heartEmpty from "../images/heart-empty-icon.png"
 import {config} from "../Constants"
+import {Link} from "react-router-dom"
 
 
 const Book = ({props})=>
@@ -64,15 +65,17 @@ const Book = ({props})=>
     }
 
     return (
-        <div className="book-container">
-            <p className={`book-title`}>{props.title}</p>
-            <p>{props.year}</p>
-            <img className="book-cover" src={props.img} alt="book cover"></img>
-            {userName?
-            <img className="liked-book-icon" src={likedByUser?heartFilled:heartEmpty} alt="like book button" onClick={handleUserClickedHeart}></img>:
-            null
-            }
-        </div>
+        <Link to={`/book/${props.id}`}>
+            <div className="book-container">
+                <p className={`book-title`}>{props.title}</p>
+                <p>{props.year}</p>
+                <img className="book-cover" src={props.img} alt="book cover"></img>
+                {userName?
+                <img className="liked-book-icon" src={likedByUser?heartFilled:heartEmpty} alt="like book button" onClick={handleUserClickedHeart}></img>:
+                null
+                }
+            </div>
+        </Link>
     );
 }
 
