@@ -3,6 +3,7 @@ using BookReviews.Infrastructure.Authentication.Helpers;
 using BookReviews.Infrastructure.Authentication.Policies;
 using BookReviews.Infrastructure.Authentication.Schemas;
 using BookReviews.Infrastructure.Cryptography;
+using BookReviews.Infrastructure.Mappers;
 using BookReviews.Infrastructure.Registration;
 using BookReviews.WebAPI.Consts;
 using BookReviewsAPI.Registration;
@@ -41,6 +42,7 @@ namespace Microsoft.Extensions
             services.AddTransient<IUserAuthenticationHelper, UserAuthenticatonHelper>();
             services.AddTransient<IClaimsHelper, UserClaimsHelper>();
             services.AddTransient<IRegistrationHelper, RegistrationHelper>();
+            services.AddTransient<ImageSourcePathMapper>();
         }
 
         public static void AddCookieAuthenticationAndAuthorization(this IServiceCollection services)

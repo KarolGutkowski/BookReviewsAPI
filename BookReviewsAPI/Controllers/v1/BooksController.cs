@@ -5,6 +5,7 @@ using BookReviews.Domain.Models;
 using BookReviews.Infrastructure.Authentication.Policies;
 using BookReviews.Domain.Models.DataModels;
 using BookReviews.Infrastructure.Authentication.Helpers;
+using BookReviews.Infrastructure.Mappers;
 
 namespace BookReviewsAPI.Controllers
 {
@@ -19,15 +20,18 @@ namespace BookReviewsAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly BookReviewsDbContext _bookReviewsDbContext;
         private readonly IClaimsHelper _userClaimsHelper;
+        private readonly ImageSourcePathMapper _imageSourcePathMapper;
         public BooksController(BookReviewsDbContext bookReviewsDbContext,
             IConfiguration configuration,
             ILogger<BooksController> logger,
-            IClaimsHelper userClaimsHelper)
+            IClaimsHelper userClaimsHelper, 
+            ImageSourcePathMapper imageSourcePathMapper)
         {
             _bookReviewsDbContext = bookReviewsDbContext;
             _configuration = configuration;
             _logger = logger;
             _userClaimsHelper = userClaimsHelper;
+            _imageSourcePathMapper = imageSourcePathMapper;
         }
 
         [HttpGet]
@@ -38,7 +42,7 @@ namespace BookReviewsAPI.Controllers
             var books = _bookReviewsDbContext.Books;
             foreach (var book in books)
             {
-                MapBookImageSourceToEndpointPath(book);
+                _imageSourcePathMapper.MapBookImageSourceToEndpointPath(book);
             }
             return Ok(books);
         }
@@ -61,20 +65,11 @@ namespace BookReviewsAPI.Controllers
             }
 
             if (bookResult is not null)
-                MapBookImageSourceToEndpointPath(bookResult);
+                _imageSourcePathMapper.MapBookImageSourceToEndpointPath(bookResult);
 
             return bookResult is not null ? Ok(bookResult) : NoContent();
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [AllowAnonymous]
-        private void MapBookImageSourceToEndpointPath(Book book)
-        {
-            if (book.Img is null)
-                book.Img = "placeholder";
-
-            book.Img = _configuration.GetSection("ImageEndpointPrefix").Value + book.Img + ".jpeg";
-        }
 
         [HttpGet("img/{name}")]
         [AllowAnonymous]
@@ -103,7 +98,7 @@ namespace BookReviewsAPI.Controllers
                 return NoContent();
             }
 
-            MapBookImageSourceToEndpointPath(result);
+            _imageSourcePathMapper.MapBookImageSourceToEndpointPath(result);
             return Ok(result);
         }
 

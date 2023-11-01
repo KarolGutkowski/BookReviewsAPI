@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookReviews.Domain.Models.DataModels;
 
@@ -10,6 +11,8 @@ public class Review
     [Required]
     public User User { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    [Precision(6,5)]
     public decimal Rating { get; set; }
     public string Content { get; set; }
 }

@@ -9,6 +9,8 @@ public class Book
     [Required]
     public string Title { get; set; }
     public int Year { get; set; }
+    public string Description { get; set; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ICollection<Author>? Authors { get; set; }
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
