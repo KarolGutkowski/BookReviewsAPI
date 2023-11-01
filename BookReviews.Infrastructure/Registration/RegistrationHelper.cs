@@ -21,7 +21,8 @@ public class RegistrationHelper : IRegistrationHelper
         var user = new User()
         {
             UserName = username,
-            Password = hashedPassword
+            Password = hashedPassword,
+            ProfileImage = String.Empty
         };
 
         if (_bookReviewsDbContext.Users.Any(x => x.UserName == username))
