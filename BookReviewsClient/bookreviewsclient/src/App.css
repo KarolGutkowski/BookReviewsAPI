@@ -66,8 +66,6 @@ a:link {
 .content-container
 {
   padding: 0;
-  /*display: flex;
-  justify-content: center;*/
   background-color: transparent;
   width: 80%;
   margin: auto;
@@ -75,22 +73,61 @@ a:link {
 
 .book-container
 {
-  text-align: center;
+  background-color: transparent;
   margin: 1rem;
-  padding:0;
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  padding: 20px 10px 10px 0px;
+}
+.book-year-wrapper
+{
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-items: flex-end;
+  align-items: flex-end;
 }
 
-.book-title
+.book-images-container
 {
-  font-weight: bold;
-  display: block;
-  width: 100%;
-  margin: 0;
+  position: relative;
+  bottom: 0;
+  right: 0;
 }
+
+.book-year{
+  transform: rotate(-90deg);
+  color: black;
+  font-size: 2rem;
+  font-weight: 600;
+  display: block;
+  margin-right: -20px;
+  margin-bottom: 25px;
+}
+
 .book-cover
 {
-  height: 327px;
-  width: 217px;
+  z-index: 1;
+  height: 600px;
+  width: 420px;
+}
+
+.liked-book-icon
+{
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  height: 50px;
+  width: 50px;
+  transition: 0.5s;
+
+}
+
+
+.liked-book-icon:hover
+{
+  transform: scale(1.3);
 }
 
 .books-container
@@ -99,6 +136,7 @@ a:link {
     flex-wrap: wrap;
     justify-content: center;
 }
+
 
 .get-all-books-button
 {
@@ -193,15 +231,9 @@ a
   text-decoration: none;
 }
 
-.liked-book-icon
-{
-  height: 50px;
-  width: 50px;
-}
 
 .form-container
 {
-  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -291,21 +323,129 @@ a
 
 .book-details-side-section
 {
-  margin-left: 100px;
+  margin-left: 5vw;
 }
 
 .book-details-large-text
 {
   padding-top: 0;
   margin-top: 0;
-  font-size: 2rem;
+  font-weight: 600;
+  font-size: 3rem;
+  line-height: 2rem;
 }
 
 .book-details-small-text
 {
   padding-bottom: 0;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #284339;
-  font-weight: bold;
+  font-weight: 600;
+}
+
+.main-page-content-container
+{
+  display: flex;
+  justify-content: center;
+}
+
+.user-profile-container
+{
+  display: block;
+  text-align: center;
+}
+
+.user-profile-container h1
+{
+  text-transform: uppercase;
+  color: #284339;
+  font-size: 4rem;
+  font-weight: 600;
+}
+
+.user-profile-content
+{
+  display: flex;
+}
+
+.user-data-section
+{
+  width: 30%;
+}
+
+.liked-books-container
+{
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.liked-books-container .book-cover
+{
+  height: 450px;
+  width: 315px;
+}
+
+.user-profile-avatar
+{
+  width: 200px;
+  height: 200px;
+  border: #284339 10px solid;
+  border-radius: 100%;
+}
+
+.liked-books-title
+{
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 3rem;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* credit for loader to https://codepen.io/SumVirus/pen/RwvaxBO */
+
+.loader {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  margin: auto;
+  margin-top: 200px;
+}
+
+/* LOADER 7 */
+
+#loader-7 {
+  -webkit-perspective: 240px;
+  -moz-perspective: 240px;
+  -ms-perspective: 240px;
+  perspective: 240px;
+}
+
+#loader-7:before {
+  content: "";
+  position: absolute;
+  left: 25px;
+  top: 25px;
+  width: 100px;
+  height: 100px;
+  background-color: #284339;
+  animation: flip 1s infinite;
+}
+
+@keyframes flip {
+  0% {
+    transform: rotate(0);
+  }
+
+  50% {
+    transform: rotateY(180deg);
+  }
+
+  100% {
+    transform: rotateY(180deg) rotateX(180deg);
+  }
 }

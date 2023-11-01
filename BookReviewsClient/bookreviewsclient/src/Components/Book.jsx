@@ -6,16 +6,19 @@ import {config} from "../Constants"
 import {Link} from "react-router-dom"
 
 
-const Book = ({props})=>
+const Book = (props)=>
 {
     const {userName}= useContext(UserLoginStateContext);
     const [likedByUser, setLikedByUser] = useState(false);
+    const {book} = props;
+    const displayLikeImage = props.displayLikeImage??true;
+
 
     useEffect(()=>
     {
         if(userName)
         {
-            const id = props.id;
+            const id = book.id;
             fetch(`${config.url}/api/v1/books/liked/${id}`,{
                                     method: "GET",
                                     credentials: "include",
@@ -38,7 +41,7 @@ const Book = ({props})=>
 
     function handleUserClickedHeart()
     {
-        const id = props.id;
+        const id = book.id;
         if(likedByUser)
         {
             fetch(`${config.url}/api/v1/books/liked/remove/${id}`,{
@@ -65,17 +68,20 @@ const Book = ({props})=>
     }
 
     return (
-        <Link to={`/book/${props.id}`}>
             <div className="book-container">
-                <p className={`book-title`}>{props.title}</p>
-                <p>{props.year}</p>
-                <img className="book-cover" src={props.img} alt="book cover"></img>
-                {userName?
-                <img className="liked-book-icon" src={likedByUser?heartFilled:heartEmpty} alt="like book button" onClick={handleUserClickedHeart}></img>:
-                null
-                }
+                <div className="book-year-wrapper">
+                    <p className="book-year">{book.year}</p>
+                </div>
+                <div className="book-images-container">
+                    <Link to={`/book/${book.id}`}>
+                        <img className="book-cover" src={book.img} alt="book cover"></img>
+                    </Link>
+                    {userName && displayLikeImage?
+                    <img className="liked-book-icon" src={likedByUser?heartFilled:heartEmpty} alt="like book button" onClick={handleUserClickedHeart}></img>:
+                    null
+                    }
+                </div>
             </div>
-        </Link>
     );
 }
 

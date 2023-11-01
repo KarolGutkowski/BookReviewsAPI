@@ -40,7 +40,9 @@ function App() {
             }>
            </Route>
            <Route path="/" element = {
-                book?<Book key={book.id} props={book}/>:null
+                <div className='main-page-content-container'>
+                  {book?<Book key={book.id} book={book}/>:null}
+                </div>
             }/>
             <Route path="/registration" element={
               <RegistrationForm />

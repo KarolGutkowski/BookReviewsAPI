@@ -38,7 +38,7 @@ export default function BooksQueryForm()
         ):
         (
           books.map((book)=>{
-              return <Book key={book.id} props={book}/>
+              return <Book key={book.id} book={book}/>
             })
         )
       }
