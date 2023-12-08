@@ -2,11 +2,33 @@ import { useContext} from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import searchIcon from "../images/search-icon.png";
 import { Link } from "react-router-dom";
+import {config} from "../Constants";
+import { useNavigate } from "react-router-dom";
 
-const NavigationBar = ()=>
+const NavigationBar = ({setSearchResultBooks})=>
 {
     const {userName,setLoggedIn} = useContext(UserLoginStateContext);
-    console.log("isLoggedIn:", userName);
+	const navigate = useNavigate();
+
+    async function searchBooks(event)
+    {
+        event.preventDefault();
+
+		var form = document.forms.searchBooksForm;
+		var formData = new FormData(form);
+
+		var searchPhrase = formData.get("searchInput");
+		const result = await fetch(`${config.url}/api/v1/books/search/${searchPhrase}`);
+
+		if(!result.ok){
+			console.error("Error fetching books");
+			return;
+		}
+		const data = await result.json();
+
+		setSearchResultBooks([...data]);
+		navigate("/search");
+    }
 
     const item = 
       <nav>
@@ -23,11 +45,11 @@ const NavigationBar = ()=>
               </Link>:
             null}
             <li className="nav-item">
-              <form className="search-bar">
+              <form className="search-bar" onSubmit={searchBooks} id="searchBooksForm">
                 <button type="submit" className="search-icon-button">
                   <img src={searchIcon} alt="search-icon" className="search-icon"/>
                 </button>
-              <input type="text" className="nav-search-bar" placeholder="Search By Title or Author"/>
+              <input type="text" className="nav-search-bar" placeholder="Search By Title or Author" name="searchInput"/>
               </form>
             </li>
             <li className="nav-item">

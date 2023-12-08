@@ -1,40 +1,46 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Book from "./Book";
 import {config} from "../Constants"
 
 export default function BooksQueryForm()
 {
     const [books,setBooks] = useState([]);
-    async function getAllBooks(event)
+
+    useEffect(()=>
     {
-        event.preventDefault();
-        try{
-            const response = await fetch(`${config.url}/api/v1/books`,
-            {
-              credentials: "include",
-            });
-            const json = await response.json();
-            setBooks(json);
-        }catch(error)
+      async function getAllBooks()
+      {
+          try{
+              const response = await fetch(`${config.url}/api/v1/books`,
+              {
+                credentials: "include",
+              });
+              const json = await response.json();
+              setBooks(json);
+          }catch(error)
+          {
+              console.error("failed loading books");
+          }
+      }
+
+      getAllBooks()
+      .catch(err =>
         {
-            console.error("failed loading books");
-        }
-    }
+          console.error(err);
+        })
+
+    },[])
+
+
+    
 
   return (
     <div>
-      {
-      books.length===0? 
-      <div className="get-all-books-container">
-        <button className="get-all-books-button" onClick={getAllBooks}>All books</button>
-      </div>:
-      null
-      }
     <div className="books-container">
       {
         !books.length?(
-          <p>No books returned</p>
+          <p>No books loaded</p>
         ):
         (
           books.map((book)=>{

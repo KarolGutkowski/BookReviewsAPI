@@ -10,11 +10,13 @@ import RegistrationForm from './Components/Register';
 import UserProfile from './Components/UserProfile';
 import {config} from "./Constants"
 import BookDetails from './Components/BookDetails';
+import BooksSearchResults from './Components/BooksSearchResults';
 
 function App() {
   const [userName, setLoggedIn] = useState(null);
   const loggedInState = {userName, setLoggedIn}
   const [book, setBook] = useState(null);
+  const [searchResultBooks, setSearchResultBooks] = useState(null);
 
   useEffect(()=>
   {
@@ -29,7 +31,7 @@ function App() {
   return (
     <UserLoginStateContext.Provider value={loggedInState}>
       <BrowserRouter>
-      <NavigationBar/>
+      <NavigationBar setSearchResultBooks={setSearchResultBooks}/>
       <div className="content-container">
         <Routes>
             <Route path="/login" element={
@@ -51,6 +53,11 @@ function App() {
 
             <Route path="/profile" element={
               <UserProfile />
+            }>
+            </Route>
+
+            <Route path="/search" element={
+              <BooksSearchResults books={searchResultBooks}/>
             }>
             </Route>
 
