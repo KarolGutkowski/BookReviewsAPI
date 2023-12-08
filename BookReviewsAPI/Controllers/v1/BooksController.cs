@@ -224,6 +224,38 @@ namespace BookReviewsAPI.Controllers
             user.LikedBooks.Remove(book);
             _bookReviewsDbContext.SaveChanges();
             return Ok();
-        }     
+        }
+        
+        [HttpGet("search/{searchPhrase}")]
+        [AllowAnonymous]
+        public ActionResult SearchBooks([FromRoute] string searchPhrase)
+        {
+            var searchPhraseCaseInsensitive = searchPhrase.ToLower();
+
+            var booksFound = _bookReviewsDbContext.Books
+                .Include(b => b.Authors)
+                .AsEnumerable()
+                .Where(book =>
+                {
+                    if (book.Title.ToLower().Contains(searchPhraseCaseInsensitive))
+                        return true;
+
+                    foreach (var author in book.Authors)
+                    {
+                        var authorNameAndSurname = String.Concat(author.FirstName, " ", author.LastName);
+                        if (authorNameAndSurname.ToLower().Contains(searchPhraseCaseInsensitive))
+                            return true;
+                    }
+
+                    return false;
+                });
+
+            foreach(var book in booksFound)
+            {
+                _imageSourcePathMapper.MapBookImageSourceToEndpointPath(book);
+            }
+
+            return Ok(booksFound);
+        }
     }
 }

@@ -22,6 +22,7 @@ public class RegistrationHelper : IRegistrationHelper
         {
             UserName = username,
             Password = hashedPassword,
+            // below is a temporary fix until we migrate current version of DB to cloud
             ProfileImage = String.Empty
         };
 
