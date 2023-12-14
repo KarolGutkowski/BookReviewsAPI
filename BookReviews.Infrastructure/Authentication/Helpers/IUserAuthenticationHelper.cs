@@ -4,5 +4,5 @@ namespace BookReviews.Infrastructure.Authentication.Helpers;
 
 public interface IUserAuthenticationHelper
 {
-    bool IsAuthenticatedUser(UserDTO user);
+    bool IsAuthenticatedUser(UserLoginDTO user);
 }

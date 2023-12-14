@@ -87,6 +87,14 @@ namespace Microsoft.Extensions
                                       .AllowAnyMethod()
                                       .AllowCredentials();
                                   });
+                options.AddPolicy(name: CorsPolicyConsts.AllowLocalhostClientWithoutHttps,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:3000")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials();
+                                  });
             });
         }
     }

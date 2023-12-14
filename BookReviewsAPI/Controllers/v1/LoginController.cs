@@ -29,7 +29,7 @@ namespace BookReviewsAPI.Controllers.v1
         }
 
         [HttpPost]
-        public ActionResult Login([FromBody] UserDTO user)
+        public ActionResult Login([FromBody] UserLoginDTO user)
         {
             if (!_userAuthenticationHelper.IsAuthenticatedUser(user))
                 return Unauthorized();

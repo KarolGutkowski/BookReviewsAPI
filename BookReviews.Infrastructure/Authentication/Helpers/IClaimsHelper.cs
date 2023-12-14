@@ -7,6 +7,6 @@ namespace BookReviews.Infrastructure.Authentication.Helpers;
 
 public interface IClaimsHelper
 {
-    ClaimsPrincipal GenerateUserClaimsPrincipal(UserDTO user, string claimsSchema);
+    ClaimsPrincipal GenerateUserClaimsPrincipal(UserLoginDTO user, string claimsSchema);
     User? TryToGetUserAccountDetails(HttpContext httpContext);
 }

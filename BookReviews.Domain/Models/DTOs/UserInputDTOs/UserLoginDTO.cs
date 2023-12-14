@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookReviews.Domain.Models.DTOs
 {
-    public class UserDTO
+    public class UserLoginDTO
     {
         public string UserName { get; set; }
         public string Password { get; set; }

@@ -6,6 +6,7 @@ using BookReviews.Infrastructure.Authentication.Policies;
 using BookReviews.Domain.Models.DataModels;
 using BookReviews.Infrastructure.Authentication.Helpers;
 using BookReviews.Infrastructure.Mappers;
+using BookReviews.Domain.Models.DTOs.ExposedDTOs;
 
 namespace BookReviewsAPI.Controllers
 {
@@ -57,6 +58,7 @@ namespace BookReviewsAPI.Controllers
                 bookResult = _bookReviewsDbContext.Books
                     .Include(b => b.Authors)
                     .Include(b => b.Reviews)
+                    .ThenInclude(r => r.User)
                     .SingleOrDefault(b => b.Id == id);
             }
             catch (InvalidOperationException)
@@ -64,12 +66,15 @@ namespace BookReviewsAPI.Controllers
                 return NotFound();
             }
 
-            if (bookResult is not null)
-                _imageSourcePathMapper.MapBookImageSourceToEndpointPath(bookResult);
+            if (bookResult is null)
+                return NoContent();
 
-            return bookResult is not null ? Ok(bookResult) : NoContent();
+            _imageSourcePathMapper.MapBookImageSourceToEndpointPath(bookResult);
+
+            var bookResultAsDTO = new BookDTO(bookResult,true, true, false);
+
+            return Ok(bookResultAsDTO);
         }
-
 
         [HttpGet("img/{name}")]
         [AllowAnonymous]
@@ -101,7 +106,6 @@ namespace BookReviewsAPI.Controllers
             _imageSourcePathMapper.MapBookImageSourceToEndpointPath(result);
             return Ok(result);
         }
-
 
         [HttpPost("liked/{id:int}")]
         public ActionResult AddLikedBook([FromRoute(Name = "id")] int id)

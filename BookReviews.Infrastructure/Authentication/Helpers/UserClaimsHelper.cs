@@ -19,7 +19,7 @@ public class UserClaimsHelper : IClaimsHelper
         _logger = logger;
         _usersRepository = usersRepository;
     }
-    public ClaimsPrincipal GenerateUserClaimsPrincipal(UserDTO user, string claimsSchema = AuthenticationSchemasConsts.DefaultSchema)
+    public ClaimsPrincipal GenerateUserClaimsPrincipal(UserLoginDTO user, string claimsSchema = AuthenticationSchemasConsts.DefaultSchema)
     {
         var claims = new List<Claim>
         {

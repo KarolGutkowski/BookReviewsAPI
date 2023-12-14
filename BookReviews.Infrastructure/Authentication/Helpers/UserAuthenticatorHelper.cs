@@ -22,7 +22,7 @@ public class UserAuthenticatonHelper : IUserAuthenticationHelper
         _passwordCryptographyHelper = passwordCryptographyHelper;
     }
 
-    public bool IsAuthenticatedUser(Domain.Models.DTOs.UserDTO user)
+    public bool IsAuthenticatedUser(Domain.Models.DTOs.UserLoginDTO user)
     {
         Domain.Models.DataModels.User? matchedUser = null;
         try

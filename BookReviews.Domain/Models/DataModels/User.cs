@@ -12,6 +12,5 @@ public class User
     public string Password { get; set; }
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ICollection<Book>? LikedBooks { get; set; }
-
     public string? ProfileImage { get; set; }
 }
