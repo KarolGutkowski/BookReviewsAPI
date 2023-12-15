@@ -1,12 +1,13 @@
 import React from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import {Navigate, Link} from "react-router-dom"
 import {config} from "../Constants"
 
 export default function LoginForm()
 {
     const {user,setLoggedIn}= useContext(UserLoginStateContext);
+    const [failedToLogin, setFailedToLogin] = useState(false);
 
     async function LoginUser(e)
     {
@@ -16,6 +17,7 @@ export default function LoginForm()
 
         const userName = formData.get("login");
         const password = formData.get("password");
+        debugger;
         try{
             const response = await fetch(`${config.url}/api/v1/login`,{
                                     method: "POST",
@@ -29,18 +31,21 @@ export default function LoginForm()
             if(!response.ok)
             {
                 console.error("Couldn't login now, try again later");
+                setFailedToLogin(true);
                 return;
             }
-            
+
             const data = await response.json();
             setLoggedIn({
                 userName: data.userName,
                 id: data.id
             })
+            setFailedToLogin(false);
             
         }catch(error)
         {
             console.error("Couldn't login now, try again later");
+            setFailedToLogin(true);
             return;
         }
     }
@@ -56,6 +61,7 @@ export default function LoginForm()
             <button className="form-button" >Log In</button>
         </form>
         }
+        {failedToLogin?<p style={{"color": "red"}}>Failed to login, check your login and password and try again.</p>:null}
         <Link to="/registration">
             <p>Register</p>
         </Link>

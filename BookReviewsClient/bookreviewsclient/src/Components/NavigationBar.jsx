@@ -55,7 +55,6 @@ const NavigationBar = ({setSearchResultBooks})=>
               <input type="text" className="nav-search-bar" placeholder="Search By Title or Author" name="searchInput"/>
               </form>
             </li>
-            <li className="nav-item">
             {user?
               <Link to="/" onClick={()=>setLoggedIn(null)}>
                 <li className="nav-item">Logout</li>
@@ -64,7 +63,6 @@ const NavigationBar = ({setSearchResultBooks})=>
                 <button className="login-button">Sign In</button>
               </Link>
             }
-            </li>
           </ul>
       </nav>
     

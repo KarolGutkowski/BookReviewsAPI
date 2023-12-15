@@ -5,7 +5,7 @@ const ErrorBoundary = withErrorBoundary(({children})=>
     // eslint-disable-next-line no-unused-vars
     const [error, _] = useErrorBoundary((error, errorInfo)=>
     {
-        console.error(error);
+        console.error("An error occured");
     });
 
     if(error){
