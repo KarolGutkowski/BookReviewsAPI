@@ -7,27 +7,30 @@ import { useNavigate } from "react-router-dom";
 
 const NavigationBar = ({setSearchResultBooks})=>
 {
-    const {userName,setLoggedIn} = useContext(UserLoginStateContext);
-	const navigate = useNavigate();
+    const {user,setLoggedIn} = useContext(UserLoginStateContext);
+	  const navigate = useNavigate();
 
     async function searchBooks(event)
     {
         event.preventDefault();
+        var form = document.forms.searchBooksForm;
+        var formData = new FormData(form);
 
-		var form = document.forms.searchBooksForm;
-		var formData = new FormData(form);
+        var searchPhrase = formData.get("searchInput");
+        try{
+            const result = await fetch(`${config.url}/api/v1/books/search/${searchPhrase}`);
 
-		var searchPhrase = formData.get("searchInput");
-		const result = await fetch(`${config.url}/api/v1/books/search/${searchPhrase}`);
+            if(!result.ok){
+              console.error("Error fetching books");
+              return;
+            }
+            const data = await result.json();
 
-		if(!result.ok){
-			console.error("Error fetching books");
-			return;
-		}
-		const data = await result.json();
-
-		setSearchResultBooks([...data]);
-		navigate("/search");
+            setSearchResultBooks([...data]);
+            navigate("/search");
+        }catch(error){
+            console.error("Error while loading search results");
+        }
     }
 
     const item = 
@@ -39,7 +42,7 @@ const NavigationBar = ({setSearchResultBooks})=>
             <Link to="/books">
               <li className="nav-item">Catalog</li>
             </Link>
-            {userName?
+            {user?
             <Link to="/profile">
                 <li className="nav-item">Profile</li>
               </Link>:
@@ -53,7 +56,7 @@ const NavigationBar = ({setSearchResultBooks})=>
               </form>
             </li>
             <li className="nav-item">
-            {userName?
+            {user?
               <Link to="/" onClick={()=>setLoggedIn(null)}>
                 <li className="nav-item">Logout</li>
               </Link>:

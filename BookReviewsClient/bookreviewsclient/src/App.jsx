@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 import { useEffect, useState} from 'react';
 import UserLoginStateContext from './Components/UserLoginStateContext';
 import BooksQueryForm from './Components/BooksQueryForm';
@@ -11,10 +11,11 @@ import UserProfile from './Components/UserProfile';
 import {config} from "./Constants"
 import BookDetails from './Components/BookDetails';
 import BooksSearchResults from './Components/BooksSearchResults';
+import ErrorBoundary from "./Components/ErrorBoundary"
 
 function App() {
-  const [userName, setLoggedIn] = useState(null);
-  const loggedInState = {userName, setLoggedIn}
+  const [user, setLoggedIn] = useState(null);
+  const loggedInState = {user, setLoggedIn}
   const [book, setBook] = useState(null);
   const [searchResultBooks, setSearchResultBooks] = useState(null);
 
@@ -25,10 +26,12 @@ function App() {
         credentials: "include",
     })
     .then(response =>response.json())
+    .catch(error => console.error("Can't connect to server. Try again later :("))
     .then(data => setBook(data))
   },[])
 
   return (
+    <ErrorBoundary>
     <UserLoginStateContext.Provider value={loggedInState}>
       <BrowserRouter>
       <NavigationBar setSearchResultBooks={setSearchResultBooks}/>
@@ -68,7 +71,7 @@ function App() {
         </div>
       </BrowserRouter>
     </UserLoginStateContext.Provider>
-
+  </ErrorBoundary>
   )
 }
 

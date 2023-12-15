@@ -5,12 +5,12 @@ import Book from "./Book";
 
 const UserProfile = (props) =>
 {
-    const {userName} = useContext(UserLoginStateContext)
+    const {user} = useContext(UserLoginStateContext)
     const [userData, setUserData] = useState(null);
 
     useEffect(()=>
     {
-        if(!userName)
+        if(!user)
             return;
 
         fetch(`${config.url}/api/v1/users`,
@@ -30,20 +30,19 @@ const UserProfile = (props) =>
             })
         .then((data)=>
             {
-                console.log(data);
                 setUserData(data)
             })
         .catch((err)=>
             {
-                console.log(err);
+                console.error("error while loading profile");
             });
 
-    },[userName]);  
+    },[user]);  
 
     
     return (
         <>
-        {userName?
+        {user?
          userData?
             <div className="user-profile-container">
                 <h1>{userData.userName}</h1>

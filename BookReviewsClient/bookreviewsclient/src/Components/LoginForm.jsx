@@ -6,7 +6,7 @@ import {config} from "../Constants"
 
 export default function LoginForm()
 {
-    const {userName,setLoggedIn}= useContext(UserLoginStateContext);
+    const {user,setLoggedIn}= useContext(UserLoginStateContext);
 
     async function LoginUser(e)
     {
@@ -16,27 +16,39 @@ export default function LoginForm()
 
         const userName = formData.get("login");
         const password = formData.get("password");
-        await fetch(`${config.url}/api/v1/login`,{
-                                method: "POST",
-                                credentials: "include",
-                                body:JSON.stringify({userName, password}),
-                                headers: {
-                                    "Content-Type": "application/json",
-                                }
-        }).then((response)=>
-        {
-            e.preventDefault();
-            if(response.status === 200)
+        try{
+            const response = await fetch(`${config.url}/api/v1/login`,{
+                                    method: "POST",
+                                    credentials: "include",
+                                    body:JSON.stringify({userName, password}),
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    }
+            })  
+
+            if(!response.ok)
             {
-                console.log(userName);
-                setLoggedIn(userName);
+                console.error("Couldn't login now, try again later");
+                return;
             }
-        })      
+            
+            const data = await response.json();
+            setLoggedIn({
+                userName: data.userName,
+                id: data.id
+            })
+            
+        }catch(error)
+        {
+            console.error("Couldn't login now, try again later");
+            return;
+        }
     }
+    console.log(user);
 
     return (
         <div className="form-container">
-        {userName?
+        {user?
         <Navigate from="/login" to="/"/>:
         <form onSubmit={LoginUser} method="post" className="app-form">
             <input type="text" name="login" placeholder="username" className="login-input"/>

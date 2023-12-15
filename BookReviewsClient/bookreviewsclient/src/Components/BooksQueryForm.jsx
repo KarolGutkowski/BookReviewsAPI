@@ -40,7 +40,7 @@ export default function BooksQueryForm()
     <div className="books-container">
       {
         !books.length?(
-          <p>No books loaded</p>
+          <div className="loader" id="loader-7"></div>
         ):
         (
           books.map((book)=>{
