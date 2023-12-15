@@ -40,7 +40,14 @@ namespace BookReviewsAPI.Controllers.v1
             HttpContext.SignInAsync(claimsSchema, principal);
             _logger.LogInformation("Logged in user with username={UserName}", user.UserName);
 
-            return Ok();
+            var id = _userAuthenticationHelper.GetUser(user);
+
+            if (id is null)
+            {
+                return StatusCode(500);
+            }
+
+            return Ok(id);
         }
     }
 }

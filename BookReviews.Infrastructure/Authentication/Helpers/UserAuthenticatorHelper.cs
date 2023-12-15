@@ -1,6 +1,7 @@
 ﻿using BookReviews.Domain.Models;
 using BookReviews.Domain.Models.DataModels;
 using BookReviews.Domain.Models.DTOs;
+using BookReviews.Domain.Models.DTOs.ExposedDTOs;
 using BookReviews.Infrastructure.Cryptography;
 using Microsoft.Extensions.Logging;
 
@@ -22,22 +23,40 @@ public class UserAuthenticatonHelper : IUserAuthenticationHelper
         _passwordCryptographyHelper = passwordCryptographyHelper;
     }
 
-    public bool IsAuthenticatedUser(Domain.Models.DTOs.UserLoginDTO user)
+    public bool IsAuthenticatedUser(UserLoginDTO user)
     {
-        Domain.Models.DataModels.User? matchedUser = null;
-        try
-        {
-            matchedUser = _bookReviewsDbContext.Users.SingleOrDefault(x => x.UserName == user.UserName);
-        }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogError("There shouldn't be two users with same username: {errorMessage}", ex.Message);
-            return false;
-        }
+        User? matchedUser = TryRetrivingUserFromDBContext(user);
 
         if (matchedUser is null)
             return false;
 
         return _passwordCryptographyHelper.VerifyPassword(user.Password, matchedUser.Password);
+    }
+
+    private User? TryRetrivingUserFromDBContext(UserLoginDTO user)
+    {
+        User? matchedUser = null;
+        try
+        {
+            matchedUser = _bookReviewsDbContext.Users.SingleOrDefault(x => x.UserName == user.UserName);
+            return matchedUser;
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError("There shouldn't be two users with same username: {errorMessage}", ex.Message);
+            return null;
+        }
+    }
+
+    public UserDTO? GetUser(UserLoginDTO user)
+    {
+        User? matchedUser = TryRetrivingUserFromDBContext(user);
+
+        if (matchedUser is null)
+            return null;
+
+        var matchedUserMappedToDTO = new UserDTO(matchedUser, false);
+
+        return matchedUserMappedToDTO;
     }
 }
