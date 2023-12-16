@@ -49,5 +49,10 @@ namespace BookReviews.Infrastructure.Mappers
 
             user.ProfileImage = MapFileNameToEndpointDataPath(user.ProfileImage);
         }
+
+        public string MapToServerPath(string fileName)
+        {
+            return $"./Resources/Images/{fileName}";
+        }
     }
 }

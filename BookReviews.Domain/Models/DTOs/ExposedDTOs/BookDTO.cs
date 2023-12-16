@@ -15,6 +15,7 @@ namespace BookReviews.Domain.Models.DTOs.ExposedDTOs
         public string Description { get; set; } = string.Empty;
         public ICollection<AuthorDTO> Authors { get; set; } = new List<AuthorDTO>();
         public ICollection<ReviewDTO> Reviews { get; set; } = new List<ReviewDTO>();
+        public decimal AverageRating { get; set; }
         public string? Img { get; set; }
         public BookDTO(Book book, bool mapAuthors, bool mapReviews, bool mappedLikedByUsers)
         {

@@ -71,7 +71,17 @@ namespace BookReviewsAPI.Controllers
 
             _imageSourcePathMapper.MapBookImageSourceToEndpointPath(bookResult);
 
-            var bookResultAsDTO = new BookDTO(bookResult,true, true, false);
+            var bookResultAsDTO = new BookDTO(bookResult, true, true, false);
+
+            decimal sum = 0m;
+            int count = 0;  
+            foreach(var review in bookResultAsDTO.Reviews)
+            {
+                sum += review.Rating;
+                count++;
+            }
+            if(count != 0)
+                bookResultAsDTO.AverageRating = sum/count;
 
             return Ok(bookResultAsDTO);
         }
@@ -80,10 +90,10 @@ namespace BookReviewsAPI.Controllers
         [AllowAnonymous]
         public ActionResult GetImageById([FromRoute(Name = "name")] string name)
         {
-            var filePath = $"./Resources/Images/{name}";
+            var filePath = _imageSourcePathMapper.MapToServerPath(name);
             if (!System.IO.File.Exists(filePath))
             {
-                filePath = $"./Resources/Images/placeholder.jpeg";
+                filePath = _imageSourcePathMapper.MapToServerPath("placeholder.jpeg");
             }
 
             Byte[] buffer = System.IO.File.ReadAllBytes(filePath);
