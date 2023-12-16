@@ -68,7 +68,7 @@ const BookDetails = () =>
         }
     
     },[id, user]);
-
+    
     return (
         book?
         <div className="book-details-page-container">
@@ -89,6 +89,9 @@ const BookDetails = () =>
                     <div className="book-details-element-normal">
                         <p className="book-details-small-text">Year</p>
                         <p className="book-details-large-text">{book.year}</p>
+                    </div>
+                    <div className="book-details-element-normal">
+                        <div className="stars" style={{"--rating": book.averageRating}}></div>
                     </div>
                 </div>
             </div>

@@ -76,7 +76,7 @@ a:link {
   background-color: transparent;
   margin: 1rem;
   display: flex;
-  width: fit-content;
+  width: 30%;
   height: fit-content;
   padding: 20px 10px 10px 0px;
 }
@@ -109,8 +109,8 @@ a:link {
 .book-cover
 {
   z-index: 1;
-  height: 600px;
-  width: 420px;
+  width: 20rem;
+  height: 30rem;
 }
 
 .liked-book-icon
@@ -134,9 +134,8 @@ a:link {
 {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
 }
-
 
 .get-all-books-button
 {
@@ -324,7 +323,6 @@ a
 .book-details-side-section
 {
   margin-left: 5vw;
-  width: 100%;
 }
 
 .book-details-large-text
@@ -350,8 +348,8 @@ a
   display: flex;
   flex-direction: row;
   margin-top: 50px;
+  margin: 50px auto 0 auto;
   justify-content: center;
-  align-content: center;
   width: 100%;
 }
 
@@ -420,12 +418,29 @@ a
   width: 315px;
 }
 
+:root{
+  --profile-picture-width: 200px;
+  --profile-picture-height: 200px;
+  --plus-sign-wh: 40px;
+}
+
 .user-profile-avatar
 {
-  width: 200px;
-  height: 200px;
-  border: #284339 10px solid;
+  width: var(--profile-picture-width);
+  height: var(--profile-picture-height);
+  border: rgb(40, 67, 57) 10px solid;
   border-radius: 100%;
+  transition: opacity 0.5s;
+}
+
+.user-profile-avatar:hover
+{
+  opacity: 0.3;
+}
+
+.hidden-file-input
+{
+  display: none;
 }
 
 .liked-books-title

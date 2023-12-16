@@ -17,7 +17,6 @@ export default function LoginForm()
 
         const userName = formData.get("login");
         const password = formData.get("password");
-        debugger;
         try{
             const response = await fetch(`${config.url}/api/v1/login`,{
                                     method: "POST",
@@ -54,7 +53,7 @@ export default function LoginForm()
     return (
         <div className="form-container">
         {user?
-        <Navigate from="/login" to="/"/>:
+        <Navigate from="/login" to="/profile"/>:
         <form onSubmit={LoginUser} method="post" className="app-form">
             <input type="text" name="login" placeholder="username" className="login-input"/>
             <input type="password" name="password" placeholder="•••••••••" id="password-input" className="login-input"/>

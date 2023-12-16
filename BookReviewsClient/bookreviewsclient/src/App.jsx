@@ -46,7 +46,7 @@ function App() {
            </Route>
            <Route path="/" element = {
                 <div className='main-page-content-container'>
-                  {book?<Book key={book.id} book={book}/>:null}
+                  {book?<Book key={book.id} book={book}/>:<div className="loader" id="loader-7"></div>}
                 </div>
             }/>
             <Route path="/registration" element={
