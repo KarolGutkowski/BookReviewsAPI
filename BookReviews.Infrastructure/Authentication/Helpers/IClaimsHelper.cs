@@ -1,5 +1,5 @@
 ﻿using BookReviews.Domain.Models.DataModels;
-using BookReviews.Domain.Models.DTOs;
+using BookReviews.Domain.Models.DTOs.ExposedDTOs;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 

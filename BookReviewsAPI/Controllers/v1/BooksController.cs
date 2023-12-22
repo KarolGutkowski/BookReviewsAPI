@@ -5,6 +5,9 @@ using BookReviews.Domain.Models;
 using BookReviews.Infrastructure.Authentication.Policies;
 using BookReviews.Domain.Models.DataModels;
 using BookReviews.Infrastructure.Authentication.Helpers;
+using BookReviews.Infrastructure.Mappers;
+using BookReviews.Domain.Models.DTOs.ExposedDTOs;
+using BookReviews.Domain.Models.DTOs.UserInputDTOs;
 
 namespace BookReviewsAPI.Controllers
 {
@@ -19,25 +22,33 @@ namespace BookReviewsAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly BookReviewsDbContext _bookReviewsDbContext;
         private readonly IClaimsHelper _userClaimsHelper;
+        private readonly ImageSourcePathMapper _imageSourcePathMapper;
         public BooksController(BookReviewsDbContext bookReviewsDbContext,
             IConfiguration configuration,
             ILogger<BooksController> logger,
-            IClaimsHelper userClaimsHelper)
+            IClaimsHelper userClaimsHelper, 
+            ImageSourcePathMapper imageSourcePathMapper)
         {
             _bookReviewsDbContext = bookReviewsDbContext;
             _configuration = configuration;
             _logger = logger;
             _userClaimsHelper = userClaimsHelper;
+            _imageSourcePathMapper = imageSourcePathMapper;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetAllBooks()
+        public ActionResult GetAllBooks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 6)
         {
-            var books = _bookReviewsDbContext.Books;
+            _logger.LogInformation("User requested all books");
+            int itemsToSkip = (pageNumber - 1) * pageSize; 
+            var books = _bookReviewsDbContext.Books
+                .Skip(itemsToSkip)
+                .Take(pageSize);
+
             foreach (var book in books)
             {
-                MapBookImageSourceToEndpointPath(book);
+                _imageSourcePathMapper.MapBookImageSourceToEndpointPath(book);
             }
             return Ok(books);
         }
@@ -52,6 +63,7 @@ namespace BookReviewsAPI.Controllers
                 bookResult = _bookReviewsDbContext.Books
                     .Include(b => b.Authors)
                     .Include(b => b.Reviews)
+                    .ThenInclude(r => r.User)
                     .SingleOrDefault(b => b.Id == id);
             }
             catch (InvalidOperationException)
@@ -59,30 +71,34 @@ namespace BookReviewsAPI.Controllers
                 return NotFound();
             }
 
-            if (bookResult is not null)
-                MapBookImageSourceToEndpointPath(bookResult);
+            if (bookResult is null)
+                return NoContent();
 
-            return bookResult is not null ? Ok(bookResult) : NoContent();
-        }
+            _imageSourcePathMapper.MapBookImageSourceToEndpointPath(bookResult);
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [AllowAnonymous]
-        private void MapBookImageSourceToEndpointPath(Book book)
-        {
-            if (book.Img is null)
-                book.Img = "placeholder";
+            var bookResultAsDTO = new BookDTO(bookResult, true, true, false);
 
-            book.Img = _configuration.GetSection("ImageEndpointPrefix").Value + book.Img + ".jpeg";
+            decimal sum = 0m;
+            int count = 0;  
+            foreach(var review in bookResultAsDTO.Reviews)
+            {
+                sum += review.Rating;
+                count++;
+            }
+            if(count != 0)
+                bookResultAsDTO.AverageRating = sum/count;
+
+            return Ok(bookResultAsDTO);
         }
 
         [HttpGet("img/{name}")]
         [AllowAnonymous]
         public ActionResult GetImageById([FromRoute(Name = "name")] string name)
         {
-            var filePath = $"./Resources/Images/{name}";
+            var filePath = _imageSourcePathMapper.MapToServerPath(name);
             if (!System.IO.File.Exists(filePath))
             {
-                filePath = $"./Resources/Images/placeholder.jpeg";
+                filePath = _imageSourcePathMapper.MapToServerPath("placeholder.jpeg");
             }
 
             Byte[] buffer = System.IO.File.ReadAllBytes(filePath);
@@ -102,10 +118,9 @@ namespace BookReviewsAPI.Controllers
                 return NoContent();
             }
 
-            MapBookImageSourceToEndpointPath(result);
+            _imageSourcePathMapper.MapBookImageSourceToEndpointPath(result);
             return Ok(result);
         }
-
 
         [HttpPost("liked/{id:int}")]
         public ActionResult AddLikedBook([FromRoute(Name = "id")] int id)
@@ -228,6 +243,77 @@ namespace BookReviewsAPI.Controllers
             user.LikedBooks.Remove(book);
             _bookReviewsDbContext.SaveChanges();
             return Ok();
-        }     
+        }
+        
+        [HttpGet("search/{searchPhrase}")]
+        [AllowAnonymous]
+        public ActionResult SearchBooks([FromRoute] string searchPhrase)
+        {
+            var searchPhraseCaseInsensitive = searchPhrase.ToLower();
+
+            var booksFound = _bookReviewsDbContext.Books
+                .Include(b => b.Authors)
+                .AsEnumerable()
+                .Where(book =>
+                {
+                    if (book.Title.ToLower().Contains(searchPhraseCaseInsensitive))
+                        return true;
+
+                    foreach (var author in book.Authors)
+                    {
+                        var authorNameAndSurname = String.Concat(author.FirstName, " ", author.LastName);
+                        if (authorNameAndSurname.ToLower().Contains(searchPhraseCaseInsensitive))
+                            return true;
+                    }
+
+                    return false;
+                });
+
+            foreach(var book in booksFound)
+            {
+                _imageSourcePathMapper.MapBookImageSourceToEndpointPath(book);
+            }
+
+            return Ok(booksFound);
+        }
+
+        [HttpPost("add")]
+        public async Task<ActionResult> AddBook([FromForm] BookUploadDTO book, IFormFile bookCover)
+        {
+            var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
+
+            if (userAccount is null || !userAccount.IsAdmin)
+                return Unauthorized();
+
+            var author = _bookReviewsDbContext.Authors
+                .Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName)
+                .FirstOrDefault();
+
+            if (author is null)
+                return BadRequest("Author not found in databasee");
+
+            var bookToBeSaved = Book.mapToBook(book, author);
+            _bookReviewsDbContext.Books.Add(bookToBeSaved);
+            _bookReviewsDbContext.SaveChanges();
+
+            var bookInDatabase = _bookReviewsDbContext.Books
+                .Where(b => b.Title == bookToBeSaved.Title)
+                .Single();
+
+            var splittedFileName = bookCover.FileName.Split('.', StringSplitOptions.RemoveEmptyEntries);
+            if (splittedFileName.Length != 2)
+                return BadRequest("bad media type");
+
+            var imageFileName = "book-" + bookInDatabase.Id + "." + splittedFileName[1];
+
+            var localPath = _imageSourcePathMapper.MapToServerPath(imageFileName);
+            using var stream = System.IO.File.Create(localPath);
+            await bookCover.CopyToAsync(stream);
+
+            bookInDatabase.Img = imageFileName;
+            _bookReviewsDbContext.SaveChanges();
+
+            return Ok(book);
+        }
     }
 }

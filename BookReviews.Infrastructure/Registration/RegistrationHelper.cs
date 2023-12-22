@@ -21,7 +21,9 @@ public class RegistrationHelper : IRegistrationHelper
         var user = new User()
         {
             UserName = username,
-            Password = hashedPassword
+            Password = hashedPassword,
+            // below is a temporary fix until we migrate current version of DB to cloud
+            ProfileImage = String.Empty
         };
 
         if (_bookReviewsDbContext.Users.Any(x => x.UserName == username))

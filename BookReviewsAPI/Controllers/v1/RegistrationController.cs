@@ -28,7 +28,7 @@ namespace BookReviewsAPI.Controllers.v1
 
 
         [HttpPost]
-        public ActionResult Register([FromBody] UserDTO user)
+        public ActionResult Register([FromBody] UserLoginDTO user)
         {
             return _registrationHelper.TryToRegisterUser(user.UserName, user.Password) ? Ok() : Conflict();
         }

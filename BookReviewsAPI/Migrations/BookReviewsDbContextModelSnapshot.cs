@@ -69,6 +69,10 @@ namespace BookReviewsAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Img")
                         .HasColumnType("nvarchar(max)");
 
@@ -103,7 +107,8 @@ namespace BookReviewsAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Rating")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(6, 5)
+                        .HasColumnType("decimal(6,5)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -125,8 +130,14 @@ namespace BookReviewsAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
