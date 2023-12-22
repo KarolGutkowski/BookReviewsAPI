@@ -6,13 +6,16 @@ import {config} from "../Constants"
 export default function BooksQueryForm()
 {
     const [books,setBooks] = useState([]);
+    const [pageNumber, setPageNumber] = useState(1);
 
     useEffect(()=>
     {
       async function getAllBooks()
       {
           try{
-              const response = await fetch(`${config.url}/api/v1/books`,
+              const response = await fetch(`${config.url}/api/v1/books?` + new URLSearchParams({
+                pageNumber: pageNumber
+              }),
               {
                 credentials: "include",
               });
@@ -30,7 +33,7 @@ export default function BooksQueryForm()
           console.error(err);
         })
 
-    },[])
+    },[pageNumber])
 
 
     
@@ -48,6 +51,8 @@ export default function BooksQueryForm()
             })
         )
       }
+      <p onClick={()=>setPageNumber(pageNumber-1)}>Previous page</p>
+      <p onClick={()=>setPageNumber(pageNumber+1)}>Next page</p>
      </div> 
     </div>
   );

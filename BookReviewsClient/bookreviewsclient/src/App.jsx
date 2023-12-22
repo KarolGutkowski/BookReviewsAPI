@@ -12,6 +12,7 @@ import {config} from "./Constants"
 import BookDetails from './Components/BookDetails';
 import BooksSearchResults from './Components/BooksSearchResults';
 import ErrorBoundary from "./Components/ErrorBoundary"
+import AddBookForm from './Components/AddBookForm';
 
 function App() {
   const [user, setLoggedIn] = useState(null);
@@ -66,6 +67,10 @@ function App() {
 
             <Route path="/book/:id" element={
                 <BookDetails />
+                }/>
+
+            <Route path="/book/add" element={
+                <AddBookForm />
                 }/>
         </Routes>
         </div>

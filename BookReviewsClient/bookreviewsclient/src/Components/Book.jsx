@@ -8,7 +8,7 @@ import {Link} from "react-router-dom"
 
 const Book = (props)=>
 {
-    const {userName}= useContext(UserLoginStateContext);
+    const {user}= useContext(UserLoginStateContext);
     const [likedByUser, setLikedByUser] = useState(false);
     const {book} = props;
     const displayLikeImage = props.displayLikeImage??true;
@@ -16,7 +16,7 @@ const Book = (props)=>
 
     useEffect(()=>
     {
-        if(userName)
+        if(user)
         {
             const id = book.id;
             fetch(`${config.url}/api/v1/books/liked/${id}`,{
@@ -37,7 +37,7 @@ const Book = (props)=>
                 console.log("Error while fetching data:" + err);
             })
         }
-    },[userName]);
+    },[user, book]);
 
     function handleUserClickedHeart()
     {
@@ -76,7 +76,7 @@ const Book = (props)=>
                     <Link to={`/book/${book.id}`}>
                         <img className="book-cover" src={book.img} alt="book cover"></img>
                     </Link>
-                    {userName && displayLikeImage?
+                    {user && displayLikeImage?
                     <img className="liked-book-icon" src={likedByUser?heartFilled:heartEmpty} alt="like book button" onClick={handleUserClickedHeart}></img>:
                     null
                     }
