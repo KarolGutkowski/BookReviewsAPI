@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import {config} from "../Constants"
 
 const RegistrationForm = ()=>
 {
@@ -21,7 +22,7 @@ const RegistrationForm = ()=>
             return;
         }
 
-        await fetch("https://localhost:7235/api/v1/register",{
+        await fetch(`${config.url}/api/v1/register`,{
                                 method: "POST",
                                 credentials: "include",
                                 body:JSON.stringify({userName, password}),

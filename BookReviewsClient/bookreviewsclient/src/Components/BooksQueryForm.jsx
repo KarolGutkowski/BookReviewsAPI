@@ -1,46 +1,58 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Book from "./Book";
+import {config} from "../Constants"
 
 export default function BooksQueryForm()
 {
     const [books,setBooks] = useState([]);
-    async function getAllBooks(event)
+    const [pageNumber, setPageNumber] = useState(1);
+
+    useEffect(()=>
     {
-        event.preventDefault();
-        try{
-            const response = await fetch("https://localhost:7235/api/v1/books",
-            {
-              credentials: "include",
-            });
-            const json = await response.json();
-            setBooks(json);
-        }catch(error)
+      async function getAllBooks()
+      {
+          try{
+              const response = await fetch(`${config.url}/api/v1/books?` + new URLSearchParams({
+                pageNumber: pageNumber
+              }),
+              {
+                credentials: "include",
+              });
+              const json = await response.json();
+              setBooks(json);
+          }catch(error)
+          {
+              console.error("failed loading books");
+          }
+      }
+
+      getAllBooks()
+      .catch(err =>
         {
-            console.error("failed loading books");
-        }
-    }
+          console.error(err);
+        })
+
+    },[pageNumber])
+
+
+    
 
   return (
     <div>
-      {
-      books.length===0? 
-      <div className="get-all-books-container">
-        <button className="get-all-books-button" onClick={getAllBooks}>All books</button>
-      </div>:
-      null
-      }
     <div className="books-container">
       {
         !books.length?(
-          <p>No books returned</p>
+          <div className="loader" id="loader-7"></div>
         ):
         (
           books.map((book)=>{
-              return <Book key={book.id} props={book}/>
+              return <Book key={book.id} book={book}/>
             })
         )
       }
+      <p onClick={()=>setPageNumber(pageNumber-1)}>Previous page</p>
+      <p onClick={()=>setPageNumber(pageNumber+1)}>Next page</p>
      </div> 
     </div>
   );

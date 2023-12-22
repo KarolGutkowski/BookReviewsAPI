@@ -2,20 +2,24 @@ import { useContext, useEffect, useState } from "react";
 import UserLoginStateContext from "./UserLoginStateContext";
 import heartFilled from "../images/heart-filled-icon.png"
 import heartEmpty from "../images/heart-empty-icon.png"
+import {config} from "../Constants"
+import {Link} from "react-router-dom"
 
 
-
-const Book = ({props})=>
+const Book = (props)=>
 {
-    const {userName}= useContext(UserLoginStateContext);
+    const {user}= useContext(UserLoginStateContext);
     const [likedByUser, setLikedByUser] = useState(false);
+    const {book} = props;
+    const displayLikeImage = props.displayLikeImage??true;
+
 
     useEffect(()=>
     {
-        if(userName)
+        if(user)
         {
-            const id = props.id;
-            fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
+            const id = book.id;
+            fetch(`${config.url}/api/v1/books/liked/${id}`,{
                                     method: "GET",
                                     credentials: "include",
             })
@@ -33,14 +37,14 @@ const Book = ({props})=>
                 console.log("Error while fetching data:" + err);
             })
         }
-    },[userName]);
+    },[user, book]);
 
     function handleUserClickedHeart()
     {
-        const id = props.id;
+        const id = book.id;
         if(likedByUser)
         {
-            fetch(`https://localhost:7235/api/v1/books/liked/remove/${id}`,{
+            fetch(`${config.url}/api/v1/books/liked/remove/${id}`,{
                 method: "PATCH",
                 credentials: "include",
             }).then((response)=>{
@@ -51,7 +55,7 @@ const Book = ({props})=>
             })
         }else
         {
-            fetch(`https://localhost:7235/api/v1/books/liked/${id}`,{
+            fetch(`${config.url}/api/v1/books/liked/${id}`,{
                 method: "POST",
                 credentials: "include"
             }).then((response)=>{
@@ -64,15 +68,20 @@ const Book = ({props})=>
     }
 
     return (
-        <div className="book-container">
-            <p className={`book-title`}>{props.title}</p>
-            <p>{props.year}</p>
-            <img className="book-cover" src={props.img} alt="book cover"></img>
-            {userName?
-            <img className="liked-book-icon" src={likedByUser?heartFilled:heartEmpty} alt="like book button" onClick={handleUserClickedHeart}></img>:
-            null
-            }
-        </div>
+            <div className="book-container">
+                <div className="book-year-wrapper">
+                    <p className="book-year">{book.year}</p>
+                </div>
+                <div className="book-images-container">
+                    <Link to={`/book/${book.id}`}>
+                        <img className="book-cover" src={book.img} alt="book cover"></img>
+                    </Link>
+                    {user && displayLikeImage?
+                    <img className="liked-book-icon" src={likedByUser?heartFilled:heartEmpty} alt="like book button" onClick={handleUserClickedHeart}></img>:
+                    null
+                    }
+                </div>
+            </div>
     );
 }
 
