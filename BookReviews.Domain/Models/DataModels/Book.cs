@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BookReviews.Domain.Models.DTOs.UserInputDTOs;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace BookReviews.Domain.Models.DataModels;
@@ -18,4 +19,13 @@ public class Book
     public string? Img { get; set; }
     [JsonIgnore]
     public ICollection<User>? LikedByUsers { get; set; }
+    public static Book mapToBook(BookUploadDTO bookData, Author author)
+    {
+        var book = new Book();
+        book.Title = bookData.Title;
+        book.Year = bookData.Year;
+        book.Description = bookData.Description;
+        book.Authors = new List<Author>() { author };
+        return book;
+    }
 }

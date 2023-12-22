@@ -7,6 +7,7 @@ using BookReviews.Domain.Models.DataModels;
 using BookReviews.Infrastructure.Authentication.Helpers;
 using BookReviews.Infrastructure.Mappers;
 using BookReviews.Domain.Models.DTOs.ExposedDTOs;
+using BookReviews.Domain.Models.DTOs.UserInputDTOs;
 
 namespace BookReviewsAPI.Controllers
 {
@@ -37,10 +38,14 @@ namespace BookReviewsAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetAllBooks()
+        public ActionResult GetAllBooks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 6)
         {
             _logger.LogInformation("User requested all books");
-            var books = _bookReviewsDbContext.Books;
+            int itemsToSkip = (pageNumber - 1) * pageSize; 
+            var books = _bookReviewsDbContext.Books
+                .Skip(itemsToSkip)
+                .Take(pageSize);
+
             foreach (var book in books)
             {
                 _imageSourcePathMapper.MapBookImageSourceToEndpointPath(book);
@@ -270,6 +275,45 @@ namespace BookReviewsAPI.Controllers
             }
 
             return Ok(booksFound);
+        }
+
+        [HttpPost("add")]
+        public async Task<ActionResult> AddBook([FromForm] BookUploadDTO book, IFormFile bookCover)
+        {
+            var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
+
+            if (userAccount is null || !userAccount.IsAdmin)
+                return Unauthorized();
+
+            var author = _bookReviewsDbContext.Authors
+                .Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName)
+                .FirstOrDefault();
+
+            if (author is null)
+                return BadRequest("Author not found in databasee");
+
+            var bookToBeSaved = Book.mapToBook(book, author);
+            _bookReviewsDbContext.Books.Add(bookToBeSaved);
+            _bookReviewsDbContext.SaveChanges();
+
+            var bookInDatabase = _bookReviewsDbContext.Books
+                .Where(b => b.Title == bookToBeSaved.Title)
+                .Single();
+
+            var splittedFileName = bookCover.FileName.Split('.', StringSplitOptions.RemoveEmptyEntries);
+            if (splittedFileName.Length != 2)
+                return BadRequest("bad media type");
+
+            var imageFileName = "book-" + bookInDatabase.Id + "." + splittedFileName[1];
+
+            var localPath = _imageSourcePathMapper.MapToServerPath(imageFileName);
+            using var stream = System.IO.File.Create(localPath);
+            await bookCover.CopyToAsync(stream);
+
+            bookInDatabase.Img = imageFileName;
+            _bookReviewsDbContext.SaveChanges();
+
+            return Ok(book);
         }
     }
 }

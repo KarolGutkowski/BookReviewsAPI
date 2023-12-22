@@ -21,7 +21,9 @@ namespace BookReviews.Infrastructure.Mappers
             if (book.Img is null)
                 book.Img = "placeholder";
 
-            var fileName = book.Img + ".jpeg";
+            var fileName = book.Img;
+            if (DoesntEndWithFileExtension(book.Img))
+                fileName +=".jpeg";
 
             book.Img = MapFileNameToEndpointDataPath(fileName);
         }
@@ -29,6 +31,22 @@ namespace BookReviews.Infrastructure.Mappers
         private string MapFileNameToEndpointDataPath(string fileName)
         {
             return _configuration.GetSection("ImageEndpointPrefix").Value + fileName;
+        }
+
+
+        private bool DoesntEndWithFileExtension(string filename)
+        {
+            List<string> acceptedExtensions = new List<string>()
+            {
+                "jpg", "png", "jpeg"
+            };
+
+            foreach(var extension in acceptedExtensions)
+            {
+                if (filename.EndsWith(extension))
+                    return false;
+            }
+            return true;
         }
 
         public void MapUsersLikedBooksSourcePahts(User user)

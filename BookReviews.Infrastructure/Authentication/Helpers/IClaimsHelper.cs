@@ -1,5 +1,5 @@
 ﻿using BookReviews.Domain.Models.DataModels;
-using BookReviews.Domain.Models.DTOs;
+using BookReviews.Domain.Models.DTOs.ExposedDTOs;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -7,6 +7,6 @@ namespace BookReviews.Infrastructure.Authentication.Helpers;
 
 public interface IClaimsHelper
 {
-    ClaimsPrincipal GenerateUserClaimsPrincipal(UserLoginDTO user, string claimsSchema);
+    ClaimsPrincipal GenerateUserClaimsPrincipal(UserDTO user, string claimsSchema);
     User? TryToGetUserAccountDetails(HttpContext httpContext);
 }
