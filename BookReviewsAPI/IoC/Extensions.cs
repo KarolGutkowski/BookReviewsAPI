@@ -64,7 +64,7 @@ namespace Microsoft.Extensions
                 {
                     policyBuilder.RequireAuthenticatedUser()
                         .AddAuthenticationSchemes(AuthenticationSchemasConsts.DefaultSchema)
-                        .RequireClaim("admin", "true");
+                        .RequireAssertion(x => x.User.Claims.Any(claim => claim.Type == AuthenticationPoliciesConsts.AdminUserAuth));
                 });
             });
         }

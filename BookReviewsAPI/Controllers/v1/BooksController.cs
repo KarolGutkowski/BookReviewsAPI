@@ -38,19 +38,33 @@ namespace BookReviewsAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetAllBooks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 6)
+        public ActionResult GetAllBooks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 7)
         {
             _logger.LogInformation("User requested all books");
+
+            if (pageNumber <= 0 || pageSize <= 0)
+                return BadRequest("Page size or page number cant be less than or equal to zero");
+
             int itemsToSkip = (pageNumber - 1) * pageSize; 
             var books = _bookReviewsDbContext.Books
                 .Skip(itemsToSkip)
                 .Take(pageSize);
 
+            var pagesCount = (_bookReviewsDbContext.Books.Count()+pageSize-1)/pageSize;
+
+
             foreach (var book in books)
             {
                 _imageSourcePathMapper.MapBookImageSourceToEndpointPath(book);
             }
-            return Ok(books);
+
+            var result = new GetBooksResponseDTO()
+            {
+                books = books.ToList(),
+                totalPagesCount = pagesCount
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")]
@@ -277,13 +291,14 @@ namespace BookReviewsAPI.Controllers
             return Ok(booksFound);
         }
 
-        [HttpPost("add")]
+        [HttpPost]
+        [Authorize(Policy = AuthenticationPoliciesConsts.AdminUserAuth)]
         public async Task<ActionResult> AddBook([FromForm] BookUploadDTO book, IFormFile bookCover)
         {
-            var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
+            /*var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
 
             if (userAccount is null || !userAccount.IsAdmin)
-                return Unauthorized();
+                return Unauthorized();*/
 
             var author = _bookReviewsDbContext.Authors
                 .Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName)
