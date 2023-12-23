@@ -76,7 +76,7 @@ a:link {
   background-color: transparent;
   margin: 1rem;
   display: flex;
-  width: 30%;
+  width: fit-content;
   height: fit-content;
   padding: 20px 10px 10px 0px;
 }
