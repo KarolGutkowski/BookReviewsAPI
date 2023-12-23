@@ -2,11 +2,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Book from "./Book";
 import {config} from "../Constants"
+import ChangePagePanel from "./ChangePagePanel";
 
 export default function BooksQueryForm()
 {
     const [books,setBooks] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
+    const [totalPagesCount, setTotalPageCount] = useState(0);
+    const [isLoading, setIsLoading ] = useState(true);
 
     useEffect(()=>
     {
@@ -20,7 +23,9 @@ export default function BooksQueryForm()
                 credentials: "include",
               });
               const json = await response.json();
-              setBooks(json);
+              setBooks(json.books);
+              setTotalPageCount(json.totalPagesCount);
+              setIsLoading(false);
           }catch(error)
           {
               console.error("failed loading books");
@@ -51,8 +56,7 @@ export default function BooksQueryForm()
             })
         )
       }
-      <p onClick={()=>setPageNumber(pageNumber-1)}>Previous page</p>
-      <p onClick={()=>setPageNumber(pageNumber+1)}>Next page</p>
+      {!isLoading ?<ChangePagePanel setPageNumber={setPageNumber} currentPageNum={pageNumber} totalPagesCount={totalPagesCount}/>:null }
      </div> 
     </div>
   );

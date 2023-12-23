@@ -11,7 +11,7 @@ const AddBookForm = () =>
        //const file = fileInput[0];
         const formData = new FormData(form);
         
-        const result = await fetch(`${config.url}/api/v1/books/add`,{
+        await fetch(`${config.url}/api/v1/books`,{
             method: 'POST',
             credentials: "include",
             body: formData

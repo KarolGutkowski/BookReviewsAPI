@@ -134,7 +134,7 @@ a:link {
 {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .get-all-books-button
@@ -516,4 +516,65 @@ a
   padding-left: 0.8rem;
   color:#284339;
   font-weight: 400;
+}
+
+.switch-page-section
+{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.change-page-buttons
+{
+  background-color: #D9D9D9;
+  color: black;
+  width: 70px;
+  height: 70px;
+  border: none;
+  margin: 19px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: 0.3s ease-in-out;
+}
+
+.change-page-buttons:hover:enabled
+{
+  background-color: #a7a7a7;
+}
+
+.change-page-buttons:disabled {
+  color: #a7a7a7;
+}
+
+.any-page-number-input {
+  background-color: transparent;
+  border: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+
+.any-page-number-input::-webkit-outer-spin-button,
+.any-page-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+
+.any-page-number-input {
+  -moz-appearance: textfield;
+}
+
+.current-page-button
+{
+  background-color: #284339;
+  color: white;
 }
