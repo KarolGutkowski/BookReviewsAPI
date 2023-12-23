@@ -59,7 +59,7 @@ const ChangePagePanel = (props) =>
         return (
             <div className="change-page-buttons">
                     <input type="number" onBlur={setPageNumberToButtonValue} placeholder="..." className="any-page-number-input"/>
-                </div>
+            </div>
         )
     }
 
