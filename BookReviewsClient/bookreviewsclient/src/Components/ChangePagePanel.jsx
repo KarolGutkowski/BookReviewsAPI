@@ -20,12 +20,11 @@ const ChangePagePanel = (props) =>
     }
         
     const buttons = [];
-    if(totalPagesCount === 3)
+    if(totalPagesCount > 0 && totalPagesCount <= 3)
     {
-        const numbersToAdd = [1,2,3];
-        for(const num of numbersToAdd)
+        for(let i=1;i<=totalPagesCount;i++)
         {
-            buttons.push(createChangePageButtonWithNumber(num));
+            buttons.push(createChangePageButtonWithNumber(i));
         }
 
     }else{
