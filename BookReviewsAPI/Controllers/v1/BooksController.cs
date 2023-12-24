@@ -38,7 +38,7 @@ namespace BookReviewsAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetAllBooks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 7)
+        public ActionResult GetAllBooks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 6)
         {
             _logger.LogInformation("User requested all books");
 
@@ -295,11 +295,6 @@ namespace BookReviewsAPI.Controllers
         [Authorize(Policy = AuthenticationPoliciesConsts.AdminUserAuth)]
         public async Task<ActionResult> AddBook([FromForm] BookUploadDTO book, IFormFile bookCover)
         {
-            /*var userAccount = _userClaimsHelper.TryToGetUserAccountDetails(HttpContext);
-
-            if (userAccount is null || !userAccount.IsAdmin)
-                return Unauthorized();*/
-
             var author = _bookReviewsDbContext.Authors
                 .Where(a => a.FirstName == book.AuthorFirstName && a.LastName == book.AuthorLastName)
                 .FirstOrDefault();
