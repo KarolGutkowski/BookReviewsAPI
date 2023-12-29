@@ -5,4 +5,6 @@
 
 In the project directory, you can run:
 ### `npm install`
+### `npm start`
+if the above doesnt startup https try:
 ### `($env:HTTPS = "true") -and (npm start) `
